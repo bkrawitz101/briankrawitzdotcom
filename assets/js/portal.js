@@ -52,3 +52,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
+
+// Handle Portal Navigation (Fade out -> Go to URL)
+document.querySelectorAll('.path-node').forEach(node => {
+    node.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        
+        // Ignore hash links (handled by smooth scroll or internal navigation)
+        if (!href || href.startsWith('#')) return;
+
+        e.preventDefault();
+
+        // Trigger Fade to Black
+        overlay.style.animation = 'none';
+        overlay.offsetHeight; // trigger reflow
+        overlay.style.animation = 'fadeToBlack 1.5s ease-in forwards';
+
+        // Navigate after animation
+        setTimeout(() => {
+            window.location.href = href;
+        }, 1500);
+    });
+});
