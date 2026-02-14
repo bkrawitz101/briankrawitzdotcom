@@ -1,0 +1,3125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover, user-scalable=yes">
+    <title>[en]lightening concepts | Brian Krawitz | Light Sculptor</title>
+    <meta name="description" content="The artistic portfolio of Brian Krawitz. Exploring the intersection of light, sacred geometry, and digital realms through immersive installations and XR environments.">
+    <meta property="og:title" content="[en]lightening concepts | Brian Krawitz">
+    <meta property="og:description" content="Exploring the intersection of light, sacred geometry, and digital realms through immersive installations and XR environments.">
+    <meta property="og:image" content="social-preview.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://briankrawitz.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            /* Tron/Blade Runner neon palette */
+            --cyan-glow: #00f3ff;
+            --orange-accent: #ff6b35;
+            --purple-deep: #7b2cbf;
+            --gold-dune: #d4af37;
+            --blue-trek: #0080ff;
+            --red-alert: #ff0055;
+            
+            /* Base colors */
+            --void-black: #000000;
+            --slate-dark: #151520;
+            --slate-medium: #1f1f2e;
+            --grid-line: rgba(0, 243, 255, 0.15);
+            --text-primary: #F5F5F5;
+            --text-muted: #8888aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--void-black);
+            color: var(--text-primary);
+            line-height: 1.6;
+            touch-action: pan-y;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Clean Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--void-black);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Animated grid background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center 0;
+            animation: gridScrollBg 4s linear infinite;
+            transform: perspective(500px) rotateX(60deg) scale(2) translateX(var(--parallax-x, 0)) translateY(var(--parallax-y, 0));
+            transition: transform 0.1s ease-out;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridScrollBg {
+            0% { background-position-y: 0; }
+            100% { background-position-y: 50px; }
+        }
+
+        .grid-bg.zoom-active {
+            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1), opacity 1.2s ease;
+            transform: perspective(500px) rotateX(60deg) scale(15) translateY(200px);
+            opacity: 0;
+        }
+
+        /* CRT Lines Overlay */
+        .crt-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 998;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header/Nav */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--cyan-glow);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+            z-index: 100;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan-glow), var(--purple-deep), var(--gold-dune));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 243, 255, 0.6), 0 0 50px rgba(0, 243, 255, 0.3);
+            letter-spacing: 2px;
+            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.5));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan-glow);
+            border: 1px solid var(--cyan-glow);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            z-index: 101;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            transition: all 0.3s ease-in-out;
+            background-color: var(--cyan-glow);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding: 4rem 2rem;
+        }
+
+        .hero-content h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--cyan-glow), var(--blue-trek), var(--purple-deep));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px var(--cyan-glow), 0 0 40px var(--blue-trek);
+            letter-spacing: 3px;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px var(--cyan-glow); opacity: 1; }
+            50% { text-shadow: 0 0 20px rgba(255,255,255,1), 0 0 40px var(--cyan-glow); opacity: 0.9; }
+            98% { opacity: 1; }
+            99% { opacity: 0.8; transform: translateX(2px); } /* Occasional flicker */
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .hero-content h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 2rem;
+            color: var(--gold-dune);
+            font-weight: 300;
+            letter-spacing: 6px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-content .hero-name {
+            font-family: Orbitron, sans-serif;
+            font-size: 4.2rem;
+            font-weight: 900;
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+        }
+
+        .hero-content .hero-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, var(--cyan-glow), var(--blue-trek), var(--purple-deep));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px var(--cyan-glow), 0 0 40px var(--blue-trek);
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        /* mobile tweak */
+        @media (max-width: 768px) {
+            .hero-content .hero-name {
+                font-size: 2.6rem;
+                letter-spacing: 0.12em;
+            }
+            .hero-content .hero-brand {
+                font-size: 1.2rem;
+                letter-spacing: 0.25em;
+            }
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, var(--cyan-glow), var(--blue-trek));
+            color: var(--void-black);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5), 0 0 40px rgba(0, 243, 255, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.8);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Section Headers */
+        .section {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.9rem, 4vw, 2rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--cyan-glow);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            position: relative;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(0,255,255,0.2);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cyan-glow), transparent);
+            margin: 1rem auto;
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        /* Work Grid */
+        .work-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            background: var(--slate-medium);
+            color: var(--text-primary);
+            border: 1px solid var(--cyan-glow);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--cyan-glow);
+            color: var(--void-black);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .work-card {
+            background: var(--slate-medium);
+            border: 1px solid var(--grid-line);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .work-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--cyan-glow);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.5), 0 0 60px rgba(255, 255, 255, 0.1);
+        }
+
+        .work-card-content {
+            padding: 1.5rem;
+            background: var(--slate-medium);
+            border-top: 1px solid var(--grid-line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .work-card h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .explore-link {
+            display: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyan-glow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .work-card:hover .explore-link {
+            color: var(--text-primary);
+            text-shadow: 0 0 8px var(--cyan-glow);
+        }
+
+        .modal-image-thumb.active {
+            border-color: var(--cyan-glow);
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        /* Match the context line color to the card title */
+        .work-card p:nth-of-type(2) {
+            color: #F5F5F5 !important;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--slate-medium);
+            border-top: 2px solid var(--cyan-glow);
+            border-bottom: 2px solid var(--cyan-glow);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .contact-item {
+            text-align: center;
+            padding: 2rem;
+            border: 1px solid var(--grid-line);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            border-color: var(--cyan-glow);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .contact-item h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--gold-dune);
+            margin-bottom: 1rem;
+        }
+
+        .contact-item a {
+            color: var(--cyan-glow);
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            color: var(--text-primary) !important;
+            transform: translateY(-3px);
+            text-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--void-black);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--grid-line);
+            color: var(--text-muted);
+        }
+
+        /* Terminal Badge */
+        .terminal-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 20, 0, 0.85);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            z-index: 10;
+            pointer-events: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .work-card:hover .terminal-badge {
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+            text-shadow: 0 0 5px rgba(0, 255, 0, 0.8);
+            background: rgba(0, 30, 0, 0.95);
+        }
+
+        .blink-cursor {
+            animation: blinkCursor 1s step-end infinite;
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 767px) {
+            .hamburger {
+                display: block;
+            }
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .nav-links {
+                position: fixed;
+                left: 100%;
+                top: 0;
+                flex-direction: column;
+                background-color: rgba(10, 10, 15, 0.98);
+                width: 100%;
+                height: 100vh;
+                justify-content: center;
+                align-items: center;
+                transition: 0.4s ease;
+                backdrop-filter: blur(10px);
+                z-index: 100;
+                gap: 2rem;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.5rem;
+            }
+
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Glitch effect for hover states */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .glitch:hover {
+            animation: glitch 0.3s ease-in-out;
+        }
+
+        /* Max Headroom Digital Craziness */
+        @keyframes maxHeadroom {
+            0% { transform: skew(0deg) scale(1); }
+            10% { transform: skew(-2deg) scale(1.02) translateX(-2px); }
+            20% { transform: skew(3deg) scale(0.98) translateX(2px); }
+            30% { transform: skew(-1deg) scale(1.01); }
+            40% { transform: skew(2deg) scale(0.99) translateX(-1px); }
+            50% { transform: skew(0deg) scale(1); }
+            60% { transform: skew(1deg) scale(1.01) translateX(1px); }
+            70% { transform: skew(-3deg) scale(0.98); }
+            80% { transform: skew(2deg) scale(1.02) translateX(-2px); }
+            90% { transform: skew(-1deg) scale(0.99); }
+            100% { transform: skew(0deg) scale(1); }
+        }
+
+        @keyframes rgbSplit {
+            0% { text-shadow: 0 0 0 var(--cyan-glow), 0 0 0 var(--red-alert); }
+            25% { text-shadow: -3px 0 0 var(--cyan-glow), 3px 0 0 var(--red-alert); }
+            50% { text-shadow: 3px 0 0 var(--cyan-glow), -3px 0 0 var(--red-alert); }
+            75% { text-shadow: -2px 0 0 var(--cyan-glow), 2px 0 0 var(--red-alert); }
+            100% { text-shadow: 0 0 0 var(--cyan-glow), 0 0 0 var(--red-alert); }
+        }
+
+        @keyframes vhsDistortion {
+            0%, 100% { clip-path: inset(0 0 0 0); }
+            10% { clip-path: inset(10% 0 5% 0); }
+            20% { clip-path: inset(5% 0 10% 0); }
+            30% { clip-path: inset(2% 0 3% 0); }
+            40% { clip-path: inset(8% 0 2% 0); }
+            50% { clip-path: inset(1% 0 8% 0); }
+            60% { clip-path: inset(12% 0 1% 0); }
+            70% { clip-path: inset(3% 0 7% 0); }
+            80% { clip-path: inset(6% 0 4% 0); }
+            90% { clip-path: inset(4% 0 6% 0); }
+        }
+
+        @keyframes staticNoise {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.05; }
+        }
+
+        @keyframes emergencyPulse {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 0, 85, 0.3),
+                            inset 0 0 20px rgba(255, 0, 85, 0.1);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 0, 85, 0.8),
+                            0 0 60px rgba(0, 243, 255, 0.4),
+                            inset 0 0 30px rgba(255, 0, 85, 0.3);
+            }
+        }
+
+        /* Static noise overlay */
+        .static-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px);
+            animation: staticNoise 0.1s infinite;
+        }
+
+        /* Emergency alert banner */
+        .emergency-banner {
+            position: relative;
+            width: 100%;
+            background: #2b0000;
+            color: #ff0055;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            padding: 0.5rem 0;
+            z-index: 2000;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: bannerFadePulse 3s infinite;
+        }
+
+        .emergency-banner span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: tickerScroll 20s linear infinite;
+        }
+
+        @keyframes bannerFadePulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; text-shadow: 0 0 8px #ff0055; }
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        /* Enhanced hero with RGB split */
+        .hero-content h1.max-glitch {
+            animation: pulse-glow 4s ease-in-out infinite, 
+                       rgbSplit 0.8s infinite,
+                       maxHeadroom 4s infinite;
+        }
+
+        /* Digital artifact overlays */
+        .work-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 243, 255, 0.02) 2px,
+                rgba(0, 243, 255, 0.02) 4px
+            );
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .work-card:hover::after {
+            opacity: 1;
+            animation: vhsDistortion 0.3s infinite;
+        }
+
+        /* Corrupted data effect on cards */
+        .work-card.glitch-active {
+            animation: maxHeadroom 0.5s infinite;
+        }
+
+        .work-card h3 {
+            position: relative;
+        }
+
+        .work-card:hover h3::after {
+            content: attr(data-glitch);
+            position: absolute;
+            left: 2px;
+            top: 0;
+            color: var(--red-alert);
+            opacity: 0.8;
+            animation: rgbSplit 0.3s infinite;
+        }
+
+        /* Work card image styling */
+        .work-image {
+            width: 100%;
+            height: 300px; /* Taller for exhibition style */
+            overflow: hidden;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--grid-line);
+            position: relative;
+        }
+
+    .clickable-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 12; /* Above badge (10) and iframe (default) */
+    }
+
+        .work-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(0, 243, 255, 0.1) 0%,
+                transparent 50%,
+                rgba(123, 44, 191, 0.1) 100%);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .work-card:hover .work-image::before {
+            opacity: 1;
+        }
+
+        .work-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease, filter 0.4s ease;
+            filter: brightness(0.9) contrast(1.1);
+        }
+
+        .work-card:hover .work-image img {
+            transform: scale(1.05);
+            filter: brightness(1.1) contrast(1.2);
+        }
+
+        /* Emergency response styling for contact section */
+        .contact-section {
+            position: relative;
+            animation: emergencyPulse 4s infinite;
+        }
+
+        .contact-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg,
+                transparent,
+                rgba(0, 243, 255, 0.1),
+                transparent 30%
+            );
+            animation: rotate360 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        @keyframes rotate360 {
+            100% { transform: rotate(360deg); }
+        }
+
+        .contact-item:hover::before {
+            opacity: 1;
+        }
+
+        /* Glitchy filter buttons */
+        .filter-btn.active {
+            animation: maxHeadroom 3s infinite;
+        }
+
+        /* Data corruption text effect */
+        @keyframes dataCorrupt {
+            0% { content: '█'; }
+            10% { content: '▓'; }
+            20% { content: '▒'; }
+            30% { content: '░'; }
+            40% { content: '▓'; }
+            50% { content: '█'; }
+            60% { content: '▒'; }
+            70% { content: '░'; }
+            80% { content: '▓'; }
+            90% { content: '█'; }
+            100% { content: '█'; }
+        }
+
+        /* Terminal-style cursor */
+        .logo::after {
+            content: '█';
+            animation: blink 1s step-end infinite;
+            color: var(--cyan-glow);
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Project Modal */
+        .project-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 2000;
+            display: none;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        .project-modal.active {
+            display: block;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            display: grid;
+            grid-template-columns: 60% 40%; /* Gallery Left, Narrative Right */
+        }
+
+        .modal-close {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 2001;
+            opacity: 0.7;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+            color: var(--cyan-glow);
+            transform: scale(1.1);
+        }
+
+        /* --- Split Screen Modal Layout --- */
+        .modal-content {
+            display: block;
+            overflow-y: auto;
+            background: #000;
+            padding: 0;
+        }
+
+        .modal-split-layout {
+            display: flex;
+            min-height: 100%;
+        }
+
+        /* Left Column: Gallery */
+        .modal-gallery {
+            width: 60%;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Right Column: Info */
+        .modal-info {
+            width: 40%;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 6rem 3rem 4rem 3rem;
+            border-left: 1px solid var(--grid-line);
+            background: #000; /* Ensure text is readable over any fixed bg */
+        }
+
+        /* Typography & Elements */
+        .modal-title-large {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .modal-year {
+            font-family: 'Monospace', 'Courier New', monospace;
+            color: var(--gold-dune);
+            font-size: 1rem;
+            opacity: 0.8;
+            display: block;
+            margin-bottom: 2rem;
+        }
+
+        .gallery-hero img, .gallery-secondary img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: zoom-in;
+            display: block;
+        }
+
+        .gallery-secondary {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .modal-tech-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* Mobile Toggle Button (Hidden on Desktop) */
+        #mobile-gallery-btn {
+            display: none;
+        }
+
+        /* Desktop Gallery Tracker */
+        .gallery-tracker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 2px;
+            background: rgba(255,255,255,0.1);
+            z-index: 2005;
+            display: none;
+        }
+
+        .gallery-progress {
+            width: 100%;
+            height: 0%;
+            background: var(--cyan-glow);
+            box-shadow: 0 0 10px var(--cyan-glow);
+            transition: height 0.1s linear;
+        }
+
+        .scroll-hint {
+            position: fixed;
+            bottom: 2rem;
+            left: 30%; /* Center of 60% gallery column */
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid var(--cyan-glow);
+            border-bottom: 2px solid var(--cyan-glow);
+            transform: translateX(-50%) rotate(45deg);
+            animation: pulseArrow 2s infinite;
+            z-index: 2005;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        @keyframes pulseArrow {
+            0% { opacity: 0.3; transform: translateX(-50%) rotate(45deg) translate(-5px, -5px); }
+            50% { opacity: 1; transform: translateX(-50%) rotate(45deg) translate(0, 0); }
+            100% { opacity: 0.3; transform: translateX(-50%) rotate(45deg) translate(-5px, -5px); }
+        }
+
+        /* --- End Split Layout --- */
+
+        .narrative-block {
+            margin-bottom: 2.5rem;
+        }
+
+        .narrative-label {
+            font-family: 'Monospace', 'Courier New', monospace;
+            color: var(--cyan-glow);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+            display: block;
+            opacity: 0.7;
+        }
+
+        .narrative-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #ccc;
+            font-weight: 300;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox.active { display: flex; }
+
+        .lightbox-content { position: relative; max-width: 90%; max-height: 90%; }
+
+        .lightbox-img { 
+            max-width: 100%; 
+            max-height: 90vh; 
+            object-fit: contain; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: var(--cyan-glow);
+            border: 1px solid var(--cyan-glow);
+            font-size: 2rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 3001;
+            user-select: none;
+        }
+
+        .lightbox-nav:hover { background: var(--cyan-glow); color: black; }
+        .lightbox-prev { left: 2rem; }
+        .lightbox-next { right: 2rem; }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            z-index: 3002;
+            line-height: 1;
+            transition: color 0.3s ease;
+        }
+        .lightbox-close:hover { color: var(--cyan-glow); }
+
+        /* Media Containers (Video/XR) */
+        .media-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+            background: #000;
+        }
+
+        .media-container iframe, 
+        .media-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* XR Button */
+        .xr-button {
+            display: inline-block;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--cyan-glow);
+            color: var(--cyan-glow);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .xr-button:hover {
+            background: var(--cyan-glow);
+            color: black;
+            box-shadow: 0 0 15px var(--cyan-glow);
+        }
+
+        @media (max-width: 968px) {
+            .gallery-tracker, .scroll-hint {
+                display: none !important;
+            }
+
+            .modal-content {
+                grid-template-columns: 1fr;
+                display: block;
+            }
+
+            /* Mobile Split Layout Override */
+            .modal-split-layout {
+                flex-direction: column;
+            }
+
+            .modal-gallery, .modal-info {
+                display: contents; /* Allows children to be reordered via flex order of parent */
+            }
+
+            /* Reordering for Mobile: Title -> Hero -> Desc -> Button -> Secondary */
+            .info-header { order: 1; padding: 4rem 1.5rem 1rem 1.5rem; text-align: center; }
+            .gallery-hero { order: 2; padding: 0 1.5rem; margin-bottom: 2rem; }
+            .info-desc { order: 3; padding: 0 1.5rem; }
+            #mobile-gallery-btn { order: 4; margin: 2rem 1.5rem; }
+            .gallery-secondary { order: 5; padding: 0 1.5rem 2rem 1.5rem; display: none; }
+            .info-footer { order: 6; padding: 2rem 1.5rem 6rem 1.5rem; }
+
+            .gallery-secondary.visible {
+                display: flex;
+            }
+
+            .modal-title-large {
+                font-size: 1.8rem;
+            }
+            
+            /* Reset styles for contents display */
+            .modal-info {
+                border-left: none;
+                height: auto;
+                position: static;
+            }
+
+            .modal-close {
+                top: 1rem;
+                right: 1rem;
+                color: white;
+                background: rgba(0,0,0,0.5);
+                border-radius: 50%;
+            }
+        }
+
+        /* Mobile Back Button for Modal */
+        .modal-back-btn {
+            display: none;
+            /* Position handled in media query */
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            color: var(--cyan-glow);
+            text-align: center;
+            padding: 1.2rem;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-top: 1px solid var(--cyan-glow);
+            z-index: 2002;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Mobile typography tweaks – stronger + smaller */
+        @media only screen and (max-width: 767px) {
+            .hero-content h1 {
+                font-size: 1.9rem !important;
+            }
+
+            .hero-content h1 br {
+                display: none;
+            }
+
+            .hero-content h1 span {
+                display: block;
+                font-size: 1rem !important;
+                letter-spacing: 3px !important;
+                margin-top: 0.5rem;
+                background: linear-gradient(135deg, var(--cyan-glow), var(--blue-trek), var(--purple-deep));
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                opacity: 1 !important;
+            }
+
+            .hero-content h2 {
+                font-size: 1.1rem !important;
+                letter-spacing: 2px;
+            }
+            .section-title {
+                font-size: 1.3rem !important;
+                letter-spacing: 0.18em;
+                text-align: center;
+            }
+            .section-subtitle {
+                font-size: 0.9rem !important;
+            }
+
+            /* Ensure sections have scroll margin for sticky header */
+            section, h2[id] {
+                scroll-margin-top: 100px;
+            }
+
+            .project-modal,
+            .modal-content {
+                overflow-x: hidden;
+            }
+
+            /* 1. Touch-Friendly Modals */
+            .project-modal.active {
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+                max-height: 100vh;
+            }
+
+            .modal-content {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                order: 1;
+                padding-top: 10px;
+            }
+
+            .modal-title {
+                font-size: 1.5rem !important;
+            }
+
+            .modal-close {
+                width: 48px;
+                height: 48px;
+                font-size: 3rem;
+                background: rgba(0,0,0,0.6);
+                border-radius: 50%;
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .modal-back-btn {
+                display: block;
+                position: relative;
+                order: 2;
+                margin: 2rem 0;
+                width: 100%;
+            }
+
+            /* Mobile Spacing Overrides */
+            .info-header {
+                padding-top: 0 !important; /* Remove the large 4rem padding from tablet view */
+            }
+
+            .modal-title-large {
+                margin-top: 5px;
+            }
+
+            .modal-tech-footer {
+                margin-top: 10px;
+            }
+
+            /* Mobile Gallery Button Style */
+            #mobile-gallery-btn {
+                display: inline-block;
+                max-width: 260px;
+                width: auto;
+                padding: 12px 24px;
+                background: transparent;
+                border: 1px solid var(--cyan-glow);
+                color: var(--cyan-glow);
+                font-family: 'Orbitron', sans-serif;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin: 1rem auto;
+                box-sizing: border-box;
+            }
+            #mobile-gallery-btn:hover {
+                background: rgba(0, 243, 255, 0.1);
+            }
+
+            /* 2. Performance & Glows */
+
+            .work-card {
+                will-change: transform;
+                box-shadow: none;
+            }
+
+            .work-card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            /* 3. Responsive Media & Hover Clean-up */
+            .work-card::after,
+            .work-image::before {
+                display: none !important;
+            }
+
+            .explore-link {
+                display: none;
+            }
+
+            /* Bio Text Optimization */
+            .bio-text {
+                font-size: 16px !important;
+                padding: 0 1rem;
+            }
+
+            /* 4. Navigation */
+            .hamburger {
+                padding: 15px; /* Larger touch target */
+            }
+
+            .nav-links {
+                gap: 2.5rem;
+            }
+
+            .nav-links a {
+                padding: 1rem;
+                display: block;
+            }
+        }
+
+    /* In-card album styles */
+    .card-album {
+        display: grid; 
+        grid-template-columns: repeat(5, 1fr); 
+        gap: 4px; padding: 8px; 
+        background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--grid-line);
+    }
+    .card-album img {
+        width: 100%; height: 45px; object-fit: cover; 
+        border: 1px solid transparent; cursor: pointer; opacity: 0.7; transition: 0.2s;
+    }
+    .card-album img:hover { opacity: 1; border-color: var(--cyan-glow); }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--cyan-glow);
+            color: var(--void-black);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.8);
+        }
+
+        /* Model Viewer Styling - Matrix/Holodeck Hybrid */
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            background: 
+                /* Matrix Construct: Dark green wireframe */
+                radial-gradient(circle at center, #001100 0%, #000 70%),
+                /* Holodeck golden grid overlay */
+                repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255, 215, 0, 0.08) 49px, rgba(255, 215, 0, 0.08) 50px),
+                repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255, 215, 0, 0.08) 49px, rgba(255, 215, 0, 0.08) 50px),
+                /* Matrix green tint */
+                linear-gradient(135deg, rgba(0, 255, 0, 0.03) 0%, transparent 50%);
+        }
+
+        /* Model lighting to match Construct aesthetic */
+        model-viewer::part(default-environment) {
+            background-image: 
+                linear-gradient(180deg, #001100 0%, #000 100%);
+        }
+
+        /* Mobile/Responsive Fix for 3D Model Viewer */
+        @media (max-width: 968px) {
+            #main-model-display {
+                width: 100% !important;
+                height: 60vh !important;
+                min-height: 450px !important;
+                position: relative !important;
+                overflow: hidden !important;
+            }
+            #model-carousel {
+                width: 100% !important;
+                min-height: 120px !important;
+                flex: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #main-model-display {
+                height: 55vh !important;
+                min-height: 400px !important;
+            }
+            model-viewer {
+                width: 100% !important;
+                height: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="crt-lines"></div>
+    <div class="static-overlay"></div>
+    <div class="emergency-banner"><span>◢◤ INCOMING TRANSMISSION ◢◤ [EN]LIGHTENING CONCEPTS ◢◤ SIGNAL ACQUIRED ◢◤ INCOMING TRANSMISSION ◢◤ [EN]LIGHTENING CONCEPTS ◢◤</span></div>
+
+    <header>
+        <nav class="container">
+            <div class="logo">[en]lightening concepts</div>
+            <ul class="nav-links">
+                <li><a href="#bio" onclick="toggleMobileMenu()">Origin</a></li>
+                <li><a href="#physical" onclick="toggleMobileMenu()">Light & Sculpture</a></li>
+                <li><a href="#digital" onclick="toggleMobileMenu()">Digital Realms</a></li>
+                <li><a href="#contact" onclick="toggleMobileMenu()">Transmission</a></li>
+            </ul>
+            <div class="hamburger" onclick="toggleMobileMenu()">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-name">BRIAN KRAWITZ</h1>
+            <h2 class="hero-brand">[en]lightening concepts</h2>
+            <p>Creative Technology Evangelist and Community Instigator, exploring the intersection of frequency, geometry, and human consciousness through radiant designs.</p>
+            <a href="#work" class="cta-button" id="enter-grid-btn">Enter the Grid</a>
+        </div>
+    </section>
+
+    <section id="work" class="section">
+        <div class="container">
+            <h2 id="physical" class="section-title" style="scroll-margin-top: 100px;">Solo Art: Illuminated Geometries</h2>
+
+            <div class="work-grid">
+                <div class="work-card" data-category="solo-physical" data-project="life-within-itself" onclick="openModal('life-within-itself')">
+                    <div class="work-image">
+                        <img src="photos/Life Within Itself/thumbnails/Live Within Itself Finished 01.jpg" alt="Life Within Itself - Sacred Geometry Sculpture" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Life Within Itself</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Sacred geometry light sculpture.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Burning Man 2017 Memorial Piece</p>
+                    </div>
+                </div>
+
+                <div class="work-card" data-category="solo-physical" data-project="fountain-pon-lai" onclick="openModal('fountain-pon-lai')">
+                    <div class="work-image">
+                        <img src="photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 01.jpg" alt="The Fountain of Pon Lai" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>The Fountain of Pon Lai</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Interactive cognitive lighting sculpture.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Exploratorium 2015</p>
+                    </div>
+                </div>
+
+                <div class="work-card" data-category="solo-physical" data-project="kryptonicity" onclick="openModal('kryptonicity')">
+                    <div class="work-image">
+                        <img src="photos/Kryptonicity/thumbnails/Kryptonicity 01.jpg" alt="Kryptonicity" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Kryptonicity</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Sci-fi aesthetic crystalline sculpture.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Art Deco Retro-Futurism</p>
+                    </div>
+                </div>
+
+                <div class="work-card" data-category="solo-physical" data-project="electric-dna" onclick="openModal('electric-dna')">
+                    <div class="work-image">
+                        <img src="photos/Electric DNA/thumbnails/Electric DNA 01.jpg" alt="Electric DNA" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Electric DNA</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Biomorphic DNA sculpture for ANDC.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Festival Installation 2013</p>
+                    </div>
+                </div>
+
+                <div class="work-card" data-category="solo-physical" data-project="blooming-vu" onclick="openModal('blooming-vu')">
+                    <div class="work-image">
+                        <img src="photos/Blooming VU/thumbnails/Blooming VU 01.jpg" alt="Blooming VU" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Blooming VU</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Rapid fabrication music visualization.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">ANDC 6-Day Build</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <h2 class="section-title" style="margin-top: 6rem;">Collaborative Art: Large Scale Installations</h2>
+
+            <div class="work-grid">
+                <div class="work-card" data-category="collab-physical" data-project="mens-amplio" onclick="openModal('mens-amplio')">
+                    <div class="work-image">
+                        <img src="photos/Mens Amplio/thumbnails/Mens Amplio 01.jpg" alt="Mens Amplio" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Mens Amplio</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Neural network installation.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Burning Man 2013 | Design Lead</p>
+                    </div>
+                </div>
+
+                <div class="work-card" data-category="collab-physical" data-project="zoa" onclick="openModal('zoa')">
+                    <div class="work-image">
+                        <img src="photos/Zoa/thumbnails/Zoa 01.jpg" alt="Zoa" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Zoa</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Deep sea bioluminescent installation.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Burning Man 2012 | Lighting Design Lead</p>
+                    </div>
+                </div>
+
+                <div class="work-card" data-category="collab-physical" data-project="brollyflock" onclick="openModal('brollyflock')">
+                    <div class="work-image">
+                        <img src="photos/Brollyflock/thumbnails/Brollyflock 01.jpg" alt="Brollyflock" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Brollyflock</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Interactive umbrella flock at EDC.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Electric Daisy Carnival 2011</p>
+                    </div>
+                </div>
+
+                <div class="work-card" data-category="collab-physical" data-project="temple-flux" onclick="openModal('temple-flux')">
+                    <div class="work-image">
+                        <img src="photos/Temple of Flux/thumbnails/Temple of Flux 01.jpg" alt="Temple of Flux" loading="lazy">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Temple of Flux</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Massive canyon inspired installation.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Burning Man Temple 2010 Project Lead</p>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Solo VR Section -->
+        <h2 id="digital" class="section-title" style="margin-top: 6rem; scroll-margin-top: 100px;">Solo VR: Virtual Sanctuaries</h2>
+
+        <div class="work-grid">
+            <div class="work-card" onclick="openModal('unity-sanctuary')">
+                <div class="work-image" style="height: auto;">
+                    <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+                        <iframe src="https://www.youtube.com/embed/R_rnILv64jo" 
+                            style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" 
+                            allowfullscreen></iframe>
+                    </div>
+                    <div class="clickable-overlay"></div>
+                    <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                </div>
+                <div class="work-card-content" style="display: block;">
+                    <h3>Unity Sanctuary</h3>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">Immersive VR collective healing.</p>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">AltspaceVR, SpatialVR</p>
+                </div>
+            </div>
+
+            <div class="work-card" onclick="openModal('connected-experience')">
+                <div class="work-image" style="height: auto;">
+                    <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+                        <iframe src="https://www.youtube.com/embed/KdBUe7cdMow?si=UMnaZcyUYNbjXJvi" title="YouTube video player" 
+                            style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="clickable-overlay"></div>
+                    <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                </div>
+                <div class="work-card-content" style="display: block;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>The Connected Experience</h3>
+                        <span class="explore-link">Explore &rarr;</span>
+                    </div>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">Immersive VR connected environments.</p>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">AltspaceVR, SpatialVR</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collaborative VR Section -->
+        <h2 class="section-title" style="margin-top: 6rem;">Collaborative VR: Immersive Ecosystems</h2>
+
+        <div class="work-grid">
+            <div class="work-card" onclick="openModal('wise-mirror')">
+                <div class="work-image">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/hZluEIen7oA" 
+                        title="YouTube video player" frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen></iframe>
+                    <div class="clickable-overlay"></div>
+                    <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                </div>
+                <div class="work-card-content" style="display: block;">
+                    <h3>Wise Mirror</h3>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">Narrative-driven VR journey.</p>
+                    <div class="tags" style="justify-content: flex-start;">
+                        <span class="tag" style="border-color: #d4af37; color: #d4af37;">Singularity University</span>
+                        <span class="tag">Narrative VR</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="work-card" onclick="openModal('tesol-worlds')">
+                <div class="work-image">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/pVs19-YphAY?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="clickable-overlay"></div>
+                    <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                </div>
+                <div class="work-card-content" style="display: block;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>TESOL VR Worlds</h3>
+                        <span class="explore-link">Explore &rarr;</span>
+                    </div>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">Virtual reality language learning</p>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">AltspaceVR, SpatialVR</p>
+                </div>
+            </div>
+
+            <div class="work-card" onclick="openModal('heartland-vr')">
+                <div class="work-image">
+                    <iframe width="100%" height="100%" 
+                    src="https://www.youtube.com/embed/FobtF1N7WII?si=yK4IEN8V9xVY1yLT" 
+                    title="YouTube video player" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen></iframe>
+                    <div class="clickable-overlay"></div>
+                    <div class="terminal-badge">&gt; ACCESS_MEDIA<span class="blink-cursor">_</span></div>
+                </div>
+                <div class="work-card-content" style="display: block;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>Heartland VR</h3>
+                        <span class="explore-link">Explore &rarr;</span>
+                    </div>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">Regenerative Virtual Twin.</p>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">Heartland Collective</p>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section class="section" id="conceptual">
+        <div class="container">
+            <h2 class="section-title">Conceptual Forge</h2>
+            <p class="section-subtitle">
+                Ideation to Actualization
+            </p>
+
+            <div class="work-grid">
+                
+                <!-- CARD 1: 3D MODEL CONCEPT (The Viewer IS the card content) -->
+                <div class="work-card" data-project="3d-models" onclick="openModal('3d-models')">
+                    <div class="work-image">
+                        <img src="3dmodels/undulating.png" 
+                             onerror="this.src='https://via.placeholder.com/400x250/0a0a0f/00f3ff?text=3D+Model'"
+                             alt="3D Model Concepts">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_MODEL<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>3D Model Concepts</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Interactive digital artifacts.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">2024</p>
+                    </div>
+                </div>
+                
+                <!-- Buddleia Orgasmica Card -->
+                <div class="work-card" data-project="buddleia-orgasmica" onclick="openModal('buddleia-orgasmica', 0)">
+                    <div class="work-image">
+                        <img src="photos/Buddleia Orgasmica/fullsize/Buddleia Orgasmica 01.jpg" id="buddleia-cover" alt="Buddleia Orgasmica">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_DATA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Buddleia Orgasmica</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Interactive light theremin concept.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Prototype 2012</p>
+                    </div>
+                </div>
+
+                <!-- Shamayim Card -->
+                <div class="work-card" data-project="shamayim" onclick="openModal('shamayim')">
+                    <div class="work-image">
+                        <img src="photos/Shamayim-The Path of Enlightenment/thumbnails/Shamayim 01.jpg" 
+                             onerror="this.src='https://via.placeholder.com/400x250/0a0a0f/00f3ff?text=Shamayim'"
+                             alt="Shamayim - The Path of Enlightenment">
+                        <div class="clickable-overlay"></div>
+                        <div class="terminal-badge">&gt; ACCESS_DATA<span class="blink-cursor">_</span></div>
+                    </div>
+                    <div class="work-card-content" style="display: block;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>Shamayim</h3>
+                            <span class="explore-link">Explore &rarr;</span>
+                        </div>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">The Path of Enlightenment.</p>
+                        <p style="color: var(--text-muted); margin: 0.5rem 0;">Prototype 2015</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="bio" class="section" style="scroll-margin-top: 100px;">
+        <div class="container">
+            <h2 class="section-title">Bio</h2>
+            
+            <div class="bio-text" style="max-width: 800px; margin: 0 auto; color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; text-align: center;">
+                <p style="margin-bottom: 1.5rem;">
+                    Brian Krawitz is a multidimensional artist working at the intersection of light, sacred geometry, and immersive technology. For over 15 years, he has been translating the invisible frequencies of consciousness into tangible, inhabitable forms—both physical and virtual.
+                </p>
+                <p style="margin-bottom: 1.5rem;">
+                    His journey began in the New York City underground electronic music scene of the early 90s, where he discovered that light and sound could function as catalysts for transformation rather than mere decoration. This revelation led him to develop a unique practice: creating large-scale temples and light sculptures specifically designed to be inhabited—spaces that serve as containers for community coherence and personal resonance.
+                </p>
+                <p style="margin-bottom: 1.5rem;">
+                    In the physical realm, Brian has designed and fabricated award-winning installations for Burning Man, including his role as Project Lead for the Temple of Flux (2010)—one of the largest temple structures in the event's history—and Lighting Design Lead for major collaborative works like Zoa (2012) and Mens Amplio (2013). His solo pieces, from the Flower of Life-inspired "Life Within Itself" to the interactive "Fountain of Pon Lai" exhibited at the San Francisco Exploratorium, demonstrate his mastery of brass fabrication, LED engineering, and sacred geometric principles.
+                </p>
+                <p style="margin-bottom: 1.5rem;">
+                    As the digital frontier opened, Brian pioneered the translation of his physical light work into virtual reality. He creates immersive VR sanctuaries and educational environments on platforms like AltspaceVR and Spatial.io, including Unity Sanctuary—a meditative yurt-inspired space—and TESOL VR Worlds, which leverages spatial memory for language acquisition. His work with Singularity University on projects like "Wise Mirror" explores narrative-driven VR experiences that bridge storytelling, community, and consciousness.
+                </p>
+                <p style="margin-bottom: 1.5rem;">
+                    Whether working with steel and frosted acrylic or Unity and 3D modeling software, Brian's work maintains a singular focus: to create portals between the seen and unseen, the physical and the energetic, the individual and the collective. His installations and environments are not simply observed—they are entered, experienced, and remembered as moments of transformation.
+                </p>
+                <p>
+                    Currently based in Nevada County, California, Brian continues to develop both physical and virtual works that invite participants to step out of the ordinary and into the extraordinary.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section contact-section" style="scroll-margin-top: 100px;">
+        <div class="container">
+            <h2 class="section-title">Interface</h2>
+            <p class="section-subtitle">Connect across the network</p>
+            
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <h3>Email</h3>
+                    <p><a href="mailto:bkrawitz@gmail.com">bkrawitz@gmail.com</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3>Location</h3>
+                    <p>Nevada County, California<br>Grass Valley / Nevada City</p>
+                </div>
+                <div class="contact-item">
+                    <h3>Networks</h3>
+                    <p style="display: flex; gap: 1.5rem; justify-content: center; align-items: center; font-size: 1.8rem;">
+                        <a href="https://www.linkedin.com/in/bkrawitz" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="color: var(--cyan-glow); transition: all 0.3s ease;">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="https://www.facebook.com/bkrawitz" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="color: var(--cyan-glow); transition: all 0.3s ease;">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://www.instagram.com/bkrawitz101" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="color: var(--cyan-glow); transition: all 0.3s ease;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="mailto:bkrawitz@gmail.com" class="cta-button">Initiate Inquiry</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</div>
+        <div class="lightbox-content">
+            <img id="lightbox-img" class="lightbox-img" src="" alt="">
+        </div>
+        <div class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1)">&#10095;</div>
+    </div>
+
+    <!-- Project Modal -->
+    <div class="project-modal" id="project-modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-back-btn" onclick="closeModal()">◢◤ BACK TO THE GRID</div>
+        <div class="modal-content">
+            <div id="modal-dynamic-content"></div>
+        </div>
+    </div>
+
+    <div id="back-to-top" class="back-to-top" onclick="scrollToTop()">↑</div>
+
+    <script>
+        // Project data structure
+        const projectData = {
+            'life-within-itself': {
+                type: 'image',
+                title: 'Life Within Itself',
+                year: '2017',
+                category: 'Solo Physical',
+                concept: 'A meditation on interconnection and divine proportion expressed through the Flower of Life pattern. This piece explores how sacred geometry can be rendered in light to create a focal point for contemplation.',
+                contribution: 'Lead Artist, Designer, Fabricator',
+                materials: 'Brass, Wood, Frosted Acrylic, Custom LEDs',
+                image: 'photos/Life Within Itself/fullsize/Live Within Itself Finished 01.jpg',
+                location: 'Private Collection',
+                details: [
+                    'Inspired by Flower of Life and Fibonacci sequence sacred geometry patterns',
+                    'Custom LED lighting system with multiple color modes',
+                    'Handcrafted brass framework with precision joints',
+                    'Layered frosted acrylic panels for optimal light diffusion',
+                    'Integrated dimming control for ambient lighting',
+                    'Designed as meditation focal point'
+                ],
+                images: [
+                    'photos/Life Within Itself/fullsize/Live Within Itself Finished 01.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself Finished 02.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself Finished 03.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself Finished 04.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 01.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 02.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 03.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 04.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 05.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 06.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 07.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 08.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 09.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 10.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 11.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 12.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 13.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 14.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 15.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 16.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 17.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 18.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 19.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 20.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 21.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 22.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 23.jpg',
+                    'photos/Life Within Itself/fullsize/Live Within Itself desing and build 24.jpg'
+                ],
+                thumbnails: [
+                    'photos/Life Within Itself/thumbnails/Live Within Itself Finished 01.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself Finished 02.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself Finished 03.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself Finished 04.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 01.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 02.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 03.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 04.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 05.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 06.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 07.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 08.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 09.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 10.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 11.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 12.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 13.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 14.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 15.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 16.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 17.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 18.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 19.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 20.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 21.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 22.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 23.jpg',
+                    'photos/Life Within Itself/thumbnails/Live Within Itself desing and build 24.jpg'
+                ],
+                tags: ['Sacred Geometry', 'LED', 'Brass']
+            },
+            'fountain-pon-lai': {
+                type: 'image',
+                title: 'The Fountain of Pon Lai',
+                year: '2015',
+                category: 'Solo Physical',
+                concept: 'The Path of Flow. An interactive cognitive lighting sculpture that responds to the presence of viewers, mimicking the fluid dynamics of water through light.',
+                contribution: 'Lead Artist, Designer',
+                materials: 'Frosted Acrylic, Interactive LEDs, Sensors',
+                image: 'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 01.jpg',
+                materials: 'Frosted Acrylic, Interactive LEDs, Sensors',
+                location: 'San Francisco Exploratorium (2015)',
+                details: [
+                    'Featured at Cognitive Technologies exhibit',
+                    'Interactive response to viewer presence',
+                    'Flowing water-inspired light patterns',
+                    'Custom cognitive sensing technology'
+                ],
+                images: [
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 01.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 02.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 03.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 04.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 05.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 06.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 07.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 08.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 09.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/fullsize/The Fountain of Pon Lai- The Path of Flow 10.jpg'
+                ],
+                thumbnails: [
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 01.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 02.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 03.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 04.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 05.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 06.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 07.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 08.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 09.jpg',
+                    'photos/The Fountain of Pon Lai- The Path of Flow/thumbnails/The Fountain of Pon Lai- The Path of Flow 10.jpg'
+                ],
+                tags: ['Interactive', 'Cognitive', 'Exploratorium']
+            },
+            'shamayim': {
+                type: 'image',
+                title: 'Shamayim',
+                year: '2015',
+                category: 'Solo Physical',
+                concept: 'The Path of Enlightenment. A prototype exploring transcendence through geometric light patterns and Hebrew mystical concepts, representing the "heavens" or "sky".',
+                contribution: 'Lead Artist, Fabrication',
+                materials: 'Mixed Medium, LEDs',
+                image: 'photos/Shamayim-The Path of Enlightenment/fullsize/Shamayim 01.jpg',
+                materials: 'Mixed Medium, LEDs',
+                location: 'Private Collection',
+                details: [
+                    'Part of Unity series concept',
+                    'Hebrew for "heavens" or "sky"',
+                    'Prototype for larger installation series',
+                    'Exploration of transcendent geometry'
+                ],
+                images: [
+                    'photos/Shamayim-The Path of Enlightenment/fullsize/Shamayim 01.jpg',
+                    'photos/Shamayim-The Path of Enlightenment/fullsize/Shamayim 02.jpg',
+                    'photos/Shamayim-The Path of Enlightenment/fullsize/Shamayim 03.jpg'
+                ],
+                thumbnails: [
+                    'photos/Shamayim-The Path of Enlightenment/thumbnails/Shamayim 01.jpg',
+                    'photos/Shamayim-The Path of Enlightenment/thumbnails/Shamayim 02.jpg',
+                    'photos/Shamayim-The Path of Enlightenment/thumbnails/Shamayim 03.jpg'
+                ],
+                tags: ['Prototype', 'Unity Series', 'Sacred Geometry']
+            },
+            'electric-dna': {
+                type: 'image',
+                title: 'Electric DNA',
+                year: '2013',
+                category: 'Solo Physical',
+                concept: 'Inspired by the fundamental strands of life, dance, and technology. A biomorphic form that bridges the organic and the electronic for a festival environment.',
+                contribution: 'Lead Artist, Fabrication',
+                materials: 'PVC, Custom Lighting Tubes, LEDs',
+                image: 'photos/Electric DNA/fullsize/Electric DNA 01.jpg',
+                materials: 'PVC, Custom Lighting Tubes, LEDs',
+                location: 'ANDC Festival',
+                details: [
+                    'Created for All Night Dance Celebration',
+                    'DNA double helix structure at large scale',
+                    'Custom light tube fabrication',
+                    'Biomorphic form meets electronic music culture',
+                    'Complete design and build'
+                ],
+                images: [
+                    'photos/Electric DNA/fullsize/Electric DNA 01.jpg',
+                    'photos/Electric DNA/fullsize/Electric DNA 02.jpg',
+                    'photos/Electric DNA/fullsize/Electric DNA 03.jpg',
+                    'photos/Electric DNA/fullsize/Electric DNA 04.jpg',
+                    'photos/Electric DNA/fullsize/Electric DNA 05.jpg'
+                ],
+                thumbnails: [
+                    'photos/Electric DNA/thumbnails/Electric DNA 01.jpg',
+                    'photos/Electric DNA/thumbnails/Electric DNA 02.jpg',
+                    'photos/Electric DNA/thumbnails/Electric DNA 03.jpg',
+                    'photos/Electric DNA/thumbnails/Electric DNA 04.jpg',
+                    'photos/Electric DNA/thumbnails/Electric DNA 05.jpg'
+                ],
+                tags: ['Festival', 'ANDC', 'Biomorphic']
+            },
+            'kryptonicity': {
+                type: 'image',
+                title: 'Kryptonicity',
+                year: '2013',
+                category: 'Solo Physical',
+                concept: 'Uniting form and function in crystalline structures that evoke Superman\'s Fortress of Solitude. A blend of 1970s sci-fi aesthetic and art deco lines.',
+                contribution: 'Lead Artist, Fabrication',
+                materials: 'Frosted Acrylic, Metal, LEDs',
+                image: 'photos/Kryptonicity/fullsize/Kryptonicity 01.jpg',
+                materials: 'Frosted Acrylic, Metal, LEDs',
+                location: 'Private Collection',
+                details: [
+                    'Retro-futurism meets art deco',
+                    'Crystal growth pattern inspiration',
+                    '1970s science fiction aesthetic',
+                    'Functional lighting sculpture',
+                    'Geometric precision cutting'
+                ],
+                images: [
+                    'photos/Kryptonicity/fullsize/Kryptonicity 01.jpg',
+                    'photos/Kryptonicity/fullsize/Kryptonicity02.jpg',
+                    'photos/Kryptonicity/fullsize/Kryptonicity 03.jpg',
+                    'photos/Kryptonicity/fullsize/Kryptonicity 04.jpg',
+                    'photos/Kryptonicity/fullsize/Kryptonicity 05.jpg'
+                ],
+                thumbnails: [
+                    'photos/Kryptonicity/thumbnails/Kryptonicity 01.jpg',
+                    'photos/Kryptonicity/thumbnails/Kryptonicity02.jpg',
+                    'photos/Kryptonicity/thumbnails/Kryptonicity 03.jpg',
+                    'photos/Kryptonicity/thumbnails/Kryptonicity 04.jpg',
+                    'photos/Kryptonicity/thumbnails/Kryptonicity 05.jpg'
+                ],
+                tags: ['Retro-Futurism', 'Art Deco', 'Crystalline']
+            },
+            'blooming-vu': {
+                type: 'image',
+                title: 'Blooming VU',
+                year: '2012',
+                category: 'Solo Physical',
+                concept: 'A rapid fabrication masterwork inspired by the intersection of music, nature, and technology. Visualizing the blooming of sound into light.',
+                contribution: 'Lead Artist, Fabrication',
+                materials: 'PVC, Custom Lighting Tubes',
+                image: 'photos/Blooming VU/fullsize/Blooming VU 01.jpg',
+                materials: 'PVC, Custom Lighting Tubes',
+                location: 'ANDC Festival',
+                details: [
+                    'Rapid fabrication process (6 days)',
+                    'Music visualization concept',
+                    'Created for All Night Dance Celebration',
+                    'Intersection of nature and technology'
+                ],
+                images: [
+                    'photos/Blooming VU/fullsize/Blooming VU 01.jpg',
+                    'photos/Blooming VU/fullsize/Blooming VU 02.jpg',
+                    'photos/Blooming VU/fullsize/Blooming VU 03.jpg',
+                    'photos/Blooming VU/fullsize/Blooming VU 04.jpg',
+                    'photos/Blooming VU/fullsize/Blooming VU 05.jpg'
+                ],
+                tags: ['Rapid Build', 'Music Visual', 'Festival']
+            },
+            "buddleia-orgasmica": {
+                type: "image",
+                title: "Buddleia Orgasmica", year: "2012", category: "Solo Physical",
+                description: "Prototype for Burning Man. Sonar-interactive light sculpture mimicking butterfly bush pollination.",
+                details: ["Digital theremin of light", "Sonar motion sensors", "Collaborative music creation"],
+                tags: ["Prototype", "Interactive", "Sonar"],
+                image: "photos/Buddleia Orgasmica/fullsize/Buddleia Orgasmica 01.jpg",
+                images: [
+                    "photos/Buddleia Orgasmica/fullsize/Buddleia Orgasmica 01.jpg", "photos/Buddleia Orgasmica/fullsize/Buddleia Orgasmica 02.jpg",
+                    "photos/Buddleia Orgasmica/fullsize/Buddleia Orgasmica 03.jpg", "photos/Buddleia Orgasmica/fullsize/Buddleia Orgasmica 04.jpg",
+                    "photos/Buddleia Orgasmica/fullsize/Buddleia Orgasmica 05.jpg"
+                ]
+            },
+            'mens-amplio': {
+                type: 'image',
+                title: 'Mens Amplio',
+                year: '2013',
+                category: 'Collaborative Physical',
+                concept: 'Inspired by brain neurons and axons, this installation visualized cognitive processes through fire and light. A massive representation of the expanded mind.',
+                contribution: 'Lighting Design, Core Sequence Programming, Team Lead',
+                materials: 'Acrylic, Metal, Fire, Interactive Lighting',
+                image: 'photos/Mens Amplio/fullsize/Mens Amplio 01.jpg',
+                materials: 'Acrylic, Metal, Fire, Interactive Lighting',
+                location: 'Burning Man 2013',
+                details: [
+                    'Collaboration with Don Cain',
+                    'Brain neuron/axon inspiration',
+                    'Custom lighting design and programming',
+                    'Led team of 10 volunteers',
+                    '200+ individual light fixtures',
+                    'Fire integration with lighting',
+                    'Interactive cognitive response system'
+                ],
+                images: [
+                    'photos/Mens Amplio/fullsize/Mens Amplio 01.jpg',
+                    'photos/Mens Amplio/fullsize/Mens Amplio 02.jpg',
+                    'photos/Mens Amplio/fullsize/Mens Amplio 03.jpg',
+                    'photos/Mens Amplio/fullsize/Mens Amplio 04.jpg',
+                    'photos/Mens Amplio/fullsize/Mens Amplio 05.jpg'
+                ],
+                thumbnails: [
+                    'photos/Mens Amplio/thumbnails/Mens Amplio 01.jpg',
+                    'photos/Mens Amplio/thumbnails/Mens Amplio 02.jpg',
+                    'photos/Mens Amplio/thumbnails/Mens Amplio 03.jpg',
+                    'photos/Mens Amplio/thumbnails/Mens Amplio 04.jpg',
+                    'photos/Mens Amplio/thumbnails/Mens Amplio 05.jpg'
+                ],
+                tags: ['Burning Man', 'Team Lead', 'Neuroscience', 'Collaboration']
+            },
+            'zoa': {
+                type: 'image',
+                title: 'Zoa',
+                year: '2012',
+                category: 'Collaborative Physical',
+                concept: 'A field of bioluminescent sea creatures brought to the desert. The lighting sequence mimicked organic breathing patterns to bring the static wood forms to life.',
+                contribution: 'Custom Fixture Design, Lighting Sequence, Team Lead',
+                materials: 'Wood, Custom LEDs, Interactive Systems',
+                image: 'photos/Zoa/fullsize/Zoa 01.jpg',
+                materials: 'Wood, Custom LEDs, Interactive Systems',
+                location: 'Burning Man 2012',
+                details: [
+                    'Flux Foundation collaboration',
+                    'Sea creature bioluminescence inspiration',
+                    'Organic "breathing" light sequences',
+                    'Custom fixture design',
+                    'Led team of 10 volunteers',
+                    '100+ lighting fixtures',
+                    'Interactive response to participants'
+                ],
+                images: [
+                    'photos/Zoa/fullsize/Zoa 01.jpg',
+                    'photos/Zoa/fullsize/Zoa 02.jpg',
+                    'photos/Zoa/fullsize/Zoa 03.jpg',
+                    'photos/Zoa/fullsize/Zoa 04.jpg',
+                    'photos/Zoa/fullsize/Zoa 05.jpg',
+                    'photos/Zoa/fullsize/Zoa 06.jpg',
+                    'photos/Zoa/fullsize/Zoa 07.jpg',
+                    'photos/Zoa/fullsize/Zoa 08.jpg'
+                ],
+                thumbnails: [
+                    'photos/Zoa/thumbnails/Zoa 01.jpg',
+                    'photos/Zoa/thumbnails/Zoa 02.jpg',
+                    'photos/Zoa/thumbnails/Zoa 03.jpg',
+                    'photos/Zoa/thumbnails/Zoa 04.jpg',
+                    'photos/Zoa/thumbnails/Zoa 05.jpg',
+                    'photos/Zoa/thumbnails/Zoa 06.jpg',
+                    'photos/Zoa/thumbnails/Zoa 07.jpg',
+                    'photos/Zoa/thumbnails/Zoa 08.jpg'
+                ],
+                tags: ['Flux Foundation', 'Organic Motion', 'Burning Man']
+            },
+            'brollyflock': {
+                type: 'image',
+                title: 'Brollyflock',
+                year: '2011',
+                category: 'Collaborative Physical',
+                concept: 'A whimsical flock of umbrella-like sculptures providing shade by day and fire/light by night. A playful interactive environment for festival goers.',
+                contribution: 'Metal Jig Design, Logistics Management, Assembly Advisor',
+                materials: 'Steel, LEDs, Fire, Nylon',
+                image: 'photos/Brollyflock/fullsize/Brollyflock 01.jpg',
+                materials: 'Steel, LEDs, Fire, Nylon',
+                location: 'Electric Daisy Carnival 2011',
+                details: [
+                    'Flux Foundation collaboration',
+                    'Umbrella flock concept',
+                    'Designed critical metal jig/form system',
+                    'Shop and warehouse logistics management',
+                    'Onsite assembly technical advisor',
+                    'Fire and LED integration'
+                ],
+                images: [
+                    'photos/Brollyflock/fullsize/Brollyflock 01.jpg',
+                    'photos/Brollyflock/fullsize/Brollyflock 02.jpg'
+                ],
+                tags: ['EDC', 'Logistics', 'Flux Foundation', 'Festival']
+            },
+            'temple-flux': {
+                type: 'image',
+                title: 'Temple of Flux',
+                year: '2010',
+                category: 'Collaborative Physical',
+                concept: 'A monumental landscape of wood and light, designed as a non-denominational space for contemplation and release. The structure emerged from the desert floor like a geological formation.',
+                contribution: 'Co-design Exterior Surface, Modular Process Lead, Logistics',
+                materials: 'Wood, Lighting, Modular Components',
+                image: 'photos/Temple of Flux/fullsize/Temple of Flux 01.jpg',
+                materials: 'Wood, Lighting, Modular Components',
+                location: 'Burning Man 2010',
+                details: [
+                    'Flux Foundation Temple - 21,000 square feet',
+                    'Co-designed exterior surface pattern',
+                    'Developed modular "thatch" system',
+                    'Led team of 30 volunteers',
+                    'Fabricated 700+ individual thatch modules',
+                    'Shop and warehouse logistics management',
+                    'One of the largest Temple structures at Burning Man'
+                ],
+                images: [
+                    'photos/Temple of Flux/fullsize/Temple of Flux 01.jpg',
+                    'photos/Temple of Flux/fullsize/Temple of Flux 02.jpg',
+                    'photos/Temple of Flux/fullsize/Temple of Flux 03.jpg'
+                ],
+                thumbnails: [
+                    'photos/Temple of Flux/thumbnails/Temple of Flux 01.jpg',
+                    'photos/Temple of Flux/thumbnails/Temple of Flux 02.jpg',
+                    'photos/Temple of Flux/thumbnails/Temple of Flux 03.jpg'
+                ],
+                tags: ['Temple', 'Massive Scale', '700+ Units', 'Flux Foundation']
+            },
+            'unity-sanctuary': {
+                title: "Unity Sanctuary",
+                year: "2020",
+                category: "Solo VR",
+                type: "video",
+                videoId: "R_rnILv64jo",
+                desc: "Immersive VR healing sanctuary for BRCvr featuring eight habitable lantern rooms encircling a central hall. Inspired by Chinese Beyond Borders and created in collaboration with my wife Tina Liu, this digital sculpture blends sacred geometry with unique artistic altars, serving as the foundation for the Unity The Path Of Us All series.",
+                contribution: "VR Environment Design, 3D Modeling",
+                materials: "AltspaceVR, Unity",
+                details: [
+                    "Platform: AltspaceVR",
+                    "Year: 2020",
+                    "Inspiration: Lantern-style Yurt Architecture",
+                    "Purpose: Meditation & Community Space"
+                ],
+                gallery: [
+                    {
+                        title: "Virtual Conversations For Content Creators – Meetup in Unity Sanctuary",
+                        videoId: "MuKx-OHiJog",
+                        start: 1215
+                    }
+                ]
+            },
+            'connected-experience': {
+                title: "The Connected Experience",
+                year: "2021",
+                category: "VR / Digital",
+                type: "video",
+                videoId: "KdBUe7cdMow",
+                concept: "A bridge between physical and virtual realities where biofeedback transforms collective consciousness into sound and light. Through sacred geometry—Metatron's Cube, Platonic Solids, and the Merkaba—participants' hearts and minds generate real-time visualizations and musical harmonies within both sculptural installations and social VR environments, creating global awareness through shared energetic resonance.",
+                contribution: "VR Prototyping, Biofeedback Integration",
+                materials: "VR Environment, Biofeedback Systems, Music Integration",
+                details: ["Event: Singularity U Australia Summit 2021", "Status: Prototype", "Focus: Social VR"],
+                images: [],
+                materials: 'VR Environment, Biofeedback Systems, Music Integration',
+                location: 'AltspaceVR Platform',
+                tags: ['Interactive VR', 'Biofeedback', 'Music Integration', 'AltspaceVR']
+            },
+            'tesol-worlds': {
+                title: "TESOL VR Worlds",
+                year: "2021",
+                category: "VR / Education",
+                type: "video",
+                heroVideo: "pVs19-YphAY", // Main Montage Video
+                concept: "Immersive environments designed for language acquisition, leveraging spatial memory and interactive context to enhance learning.",
+                contribution: "Environment Design, Educational Content Strategy",
+                materials: "VR Environment, Educational 3D Assets",
+                details: ["Use Case: Education / EdTech", "Instructors: Tina & Brian", "Goal: Immersive Language Learning"],
+                // The 5 Demo Videos
+                gallery: [
+                    { title: "Ms. Tina Lesson Plan 1", videoId: "TpWs2inzSiU" },
+                    { title: "Ms. Tina Lesson Plan 2", videoId: "_wWukLFm8jA" },
+                    { title: "Ms. Tina Lesson Plan 3", videoId: "oypJFMQNLpw" },
+                    { title: "Ms. Tina Lesson Plan 4", videoId: "x2FBKp8Nzm4" },
+                    { title: "Mr. Brian Lesson Plan 1", videoId: "6XW-3wvPT3g" },
+                    { title: "Mr. Brian Lesson Plan 2", videoId: "mT8yWOynsNA" },
+                    { title: "Mr Brian: The Articles In The City Centre", videoId: "6XW-3wvPT3g" },
+                    { title: "Mr Brian: Word Application Demo", videoId: "aFHxiDhmTeE" },
+                    { title: "Mr Brian: Word Scramble Demo", videoId: "m8-pjfkd3II" }
+                ]
+            },
+            'heartland-vr': {
+                type: 'video',
+                videoId: 'FobtF1N7WII',
+                title: 'Heartland VR',
+                year: '2023',
+                category: 'Collaborative Digital',
+                concept: 'Connecting and educating communities in sustainable and regenerative practices through an immersive virtual campus.',
+                contribution: 'Lead Unity Developer, Layout, Programming',
+                materials: 'Unity Engine, 3D Models, VR Environment',
+                image: null,
+                materials: 'Unity Engine, 3D Models, VR Environment',
+                location: 'Spatial.io Platform',
+                details: [
+                    'Lead Unity developer role',
+                    'Regenerative education focus',
+                    'Sustainable practices visualization',
+                    '3D modeling in Fusion 360 and Blender',
+                    'Environment layout and programming',
+                    'Community learning space',
+                    'Spatial.io platform deployment'
+                ],
+                images: [],
+                tags: ['Spatial.io', 'Unity Dev', 'Regen Education', 'Sustainability']
+            },
+            'wise-mirror': {
+                title: "Wise Mirror",
+                year: "2021",
+                category: "Collaborative VR",
+                type: "video",
+                videoId: "hZluEIen7oA",
+                desc: "Narrative-driven VR journey showcased at Singularity University Australia Global Summit 2021. The Wise Mirror (formerly White Mirror) is an immersive floating island experience exploring superhero character development and community connection through artistic expression.",
+                contribution: "Universe Environment Layout, Sacred Geometry Modeling",
+                materials: "Unity Engine, VR Assets",
+                details: [
+                    "Event: Singularity U Australia Global Summit 2021",
+                    "Platform: AltspaceVR", 
+                    "Concept: Narrative VR / Character Development",
+                    "Role: Universe Environment Layout, Sacred Geometry Modeling"
+                ]
+            },
+            '3d-models': {
+                title: '3D Models',
+                year: '2024',
+                category: 'Digital Art',
+                modelUrl: '3dmodels/undulating.glb',
+                concept: 'Interactive 3D model demonstration.',
+                contribution: '3D Modeling',
+                materials: 'GLB, Model Viewer',
+                image: 'photos/Life Within Itself/thumbnails/Live Within Itself Finished 01.jpg',
+                images: ['photos/Life Within Itself/thumbnails/Live Within Itself Finished 01.jpg']
+            },
+            "lantern-model": {
+                title: "Lantern",
+                year: "2026",
+                category: "Interactive 3D",
+                description: "A luminous lantern-style geometry study.",
+                materials: "GLB, WebGL, Model-Viewer",
+                location: "Digital Archive",
+                details: [
+                    "Lantern-inspired geometry",
+                    "Real-time lighting",
+                    "Explore from all angles"
+                ],
+                modelUrl: "3dmodels/lantern.glb",
+                images: ["3dmodels/lantern-thumb.png"],
+                tags: ["3D", "Lantern", "WebGL"]
+            }
+        };
+
+        // Current gallery state
+        let currentGalleryIndex = 0;
+        let currentProjectImages = [];
+        let currentProjectId = '';
+        let lightboxImages = [];
+        let currentLightboxIndex = 0;
+        let thumbnailStartIndex = 0;
+        const THUMBS_PER_PAGE = 3;
+
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const workCards = document.querySelectorAll('.work-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                workCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const category = card.getAttribute('data-category');
+                        card.style.display = category === filter ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal functions
+
+        function openModal(id, startIndex = 0) {
+            let data = projectData[id];
+            if (!data) return;
+
+            // If it's an image gallery and we want to start somewhere other than the beginning...
+            if (data.type === 'image' && startIndex > 0 && data.images && data.images.length > startIndex) {
+                // Create a temporary data object for this modal instance by cloning
+                data = JSON.parse(JSON.stringify(data));
+                // Reorder the images array to place the selected image first
+                const heroImage = data.images.splice(startIndex, 1)[0];
+                data.images.unshift(heroImage);
+                data.image = heroImage; // The rest of the function uses this as the hero
+            }
+
+            currentProjectId = id;
+            currentGalleryIndex = startIndex;
+            lightboxImages = []; // Reset lightbox images
+
+            // Special handling for 3D Models Gallery Project
+            if (id === '3d-models') {
+                const modelGallery = [
+                    {
+                        thumb: "3dmodels/undulating.png",
+                        model: "3dmodels/undulating.glb",
+                        label: "Undulating"
+                    },
+                    {
+                        thumb: "3dmodels/lantern.png", 
+                        model: "3dmodels/lantern.glb",
+                        label: "Lantern"
+                    }
+                ];
+
+                const expandBtnHTML = `
+                <!-- Full Screen Button (Fixed Overlay) -->
+                <button id="fullscreen-btn" style="
+                    position: absolute !important;
+                    top: 12px !important; 
+                    right: 12px !important;
+                    z-index: 100 !important;
+                    background: rgba(248, 250, 255, 0.15) !important;
+                    color: #555 !important;
+                    border: 1px solid rgba(180, 210, 255, 0.7) !important;
+                    border-radius: 6px !important;
+                    padding: 8px 12px !important;
+                    font-family: 'Orbitron', sans-serif !important;
+                    font-size: 11px !important;
+                    cursor: pointer !important;
+                    backdrop-filter: blur(8px) !important;
+                    transition: all 0.3s ease !important;
+                ">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                    </svg>
+                    EXPAND
+                </button>`;
+
+                const setupFsBtn = () => {
+                    const fsBtn = document.getElementById('fullscreen-btn');
+                    if (fsBtn) {
+                        fsBtn.onclick = () => {
+                            const viewerContainer = document.getElementById('main-model-display');
+                            if (!document.fullscreenElement) {
+                                viewerContainer.requestFullscreen();
+                            } else {
+                                document.exitFullscreen();
+                            }
+                        };
+                        fsBtn.onmouseover = () => fsBtn.style.background = 'rgba(180, 210, 255, 0.3)';
+                        fsBtn.onmouseout = () => fsBtn.style.background = 'rgba(248, 250, 255, 0.15)';
+                    }
+                };
+
+                const fullHTML = `
+                    <div class="modal-split-layout">
+                        <div class="modal-gallery">
+                            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; gap: 1rem;">
+                              <!-- Main Model Viewer (80% height) -->
+                              <div id="main-model-display" style="flex: 4; min-height: 300px; position: relative;">
+                                <!-- Model loads here -->
+                              </div>
+                              
+                              <!-- Thumbnail Carousel (20% height) -->
+                              <div id="model-carousel" style="flex: 1; display: flex; align-items: center; gap: 1rem; overflow-x: auto; padding: 0.5rem; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                                <!-- Thumbnails scroll horizontally here -->
+                              </div>
+                            </div>
+                        </div>
+                        <div class="modal-info">
+                            <div class="info-header">
+                                <h2 class="modal-title-large">${data.title}</h2>
+                                <span class="modal-year">${data.year} | ${data.category}</span>
+                            </div>
+                            <div class="info-desc">
+                                <span class="narrative-label">CONCEPT</span>
+                                <p class="narrative-text">${data.concept}</p>
+                            </div>
+                            <div class="info-footer modal-tech-footer">
+                                <div class="tech-item">
+                                    <span class="narrative-label">MATERIALS</span>
+                                    <p class="narrative-text" style="font-size: 0.9rem;">${data.materials}</p>
+                                </div>
+                                <div class="tech-item">
+                                    <span class="narrative-label">CONTRIBUTION</span>
+                                    <p class="narrative-text" style="font-size: 0.9rem;">${data.contribution}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                document.getElementById('modal-dynamic-content').innerHTML = fullHTML;
+
+                // Load the FIRST model by default
+                const firstModel = modelGallery[0];
+                document.getElementById('main-model-display').innerHTML = `
+                  <model-viewer 
+                    src="${firstModel.model}"
+                    loading="lazy"
+                    disable-zoom="false"
+                    touch-action="pan-x pan-y pinch-zoom"
+                    ar="false"
+                    camera-controls auto-rotate 
+                    skybox-image="3dmodels/moonlight.hdr"
+                    environment-image="3dmodels/moonlight.hdr"
+                    skybox-intensity="1.0"
+                    environment-intensity="1.0"
+                    exposure="1.0"
+                    shadow-intensity="0.8"
+                    field-of-view="70deg"
+                    min-field-of-view="30deg" 
+                    max-field-of-view="90deg"
+                    style="width:100%;height:100%;">
+                  </model-viewer>
+                  ${expandBtnHTML}
+                `;
+
+                // Create 3 thumbnails max per row, horizontal scroll
+                const carousel = document.getElementById('model-carousel');
+                modelGallery.forEach((item, index) => {
+                    const thumb = document.createElement('div');
+                    thumb.style.cssText = `
+                        width: 80px; height: 80px; 
+                        background-image: url('${item.thumb}');
+                        background-size: cover; background-position: center;
+                        border: 2px solid transparent;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        flex-shrink: 0;
+                        position: relative;
+                        transition: all 0.3s ease;
+                    `;
+                    
+                    if (index === 0) thumb.style.border = '2px solid var(--cyan-glow)';
+
+                    thumb.innerHTML = `<div style="
+                        position: absolute; bottom: 4px; left: 4px;
+                        background: rgba(0,0,0,0.8); color: white;
+                        padding: 2px 6px; font-size: 10px; border-radius: 4px;
+                        font-family: 'Orbitron', sans-serif;
+                    ">${item.label}</div>`;
+                    
+                    thumb.onclick = () => {
+                        // Load selected model
+                        document.getElementById('main-model-display').innerHTML = `
+                          <model-viewer 
+                            src="${item.model}"
+                            loading="lazy"
+                            disable-zoom="false"
+                            touch-action="pan-x pan-y pinch-zoom"
+                            ar="false"
+                            camera-controls auto-rotate 
+                            skybox-image="3dmodels/moonlight.hdr"
+                            environment-image="3dmodels/moonlight.hdr"
+                            skybox-intensity="1.0"
+                            environment-intensity="1.0"
+                            exposure="1.0"
+                            shadow-intensity="0.8"
+                            field-of-view="70deg"
+                            min-field-of-view="30deg" 
+                            max-field-of-view="90deg"
+                            style="width:100%;height:100%;">
+                          </model-viewer>
+                          ${expandBtnHTML}
+                        `;
+                        setTimeout(setupFsBtn, 0);
+                        
+                        // Active state
+                        carousel.querySelectorAll('div[style*="background-image"]').forEach(t => t.style.border = '2px solid transparent');
+                        thumb.style.border = '2px solid var(--cyan-glow)';
+                    };
+                    
+                    carousel.appendChild(thumb);
+                });
+
+                carousel.scrollLeft = 0;
+                setTimeout(setupFsBtn, 100);
+
+                const modal = document.getElementById('project-modal');
+                modal.style.display = 'block';
+                setTimeout(() => modal.classList.add('active'), 10);
+                return;
+            }
+
+            // --- Build Gallery Content (Left Column) ---
+            let galleryHTML = '';
+            
+            // 1. Hero Media (First item)
+            galleryHTML += `<div class="gallery-hero">`;
+            
+            // Check for 3D Model
+            if (data.modelUrl) {
+                galleryHTML += `
+                    <div id="model-viewer-container" class="media-container hero-media">
+                        <model-viewer 
+                            id="active-model-viewer"
+                            src="${data.modelUrl}" 
+                            alt="${data.title}"
+                            loading="lazy"
+                            disable-zoom="false"
+                            touch-action="pan-x pan-y pinch-zoom"
+                            ar="false"
+                            skybox-image="3dmodels/moonlight.hdr"
+                            environment-image="3dmodels/moonlight.hdr"
+                            skybox-intensity="1.0"
+                            environment-intensity="1.2"
+                            exposure="1.2" 
+                            shadow-intensity="0.2"
+                            shadow-softness="1"
+                            field-of-view="50deg"
+                            min-field-of-view="25deg"
+                            max-field-of-view="60deg"
+                            camera-controls 
+                            auto-rotate 
+                            style="width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
+                        </model-viewer>
+                        <!-- Full Screen Button -->
+                        <button id="fullscreen-btn" style="
+                            position: absolute;
+                            bottom: 12px; right: 12px;
+                            background: rgba(248, 250, 255, 0.1);
+                            color: #555;
+                            border: 1px solid rgba(180, 210, 255, 0.6);
+                            border-radius: 6px;
+                            padding: 6px 12px;
+                            font-family: 'Orbitron', sans-serif;
+                            font-size: 11px;
+                            cursor: pointer;
+                            backdrop-filter: blur(4px);
+                            transition: all 0.3s ease;
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                            z-index: 10;
+                        ">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg> EXPAND
+                        </button>
+                    </div>`;
+            } else {
+                // Check for video (heroVideo ID or video URL in image field)
+                const isVideo = data.heroVideo || (data.image && (data.image.includes('youtube') || data.image.includes('vimeo')));
+
+                if (isVideo) {
+                    let videoSrc = '';
+                    if (data.heroVideo) {
+                        videoSrc = `https://www.youtube.com/embed/${data.heroVideo}?autoplay=1&mute=1&loop=1&playlist=${data.heroVideo}&controls=0&showinfo=0&rel=0`;
+                    } else {
+                        // Fallback for direct URLs in image field
+                        videoSrc = data.image.includes('embed') ? data.image : data.image.replace('watch?v=', 'embed/');
+                        if (!videoSrc.includes('?')) videoSrc += '?autoplay=1&mute=1';
+                    }
+
+                    galleryHTML += `
+                        <div class="media-container hero-media">
+                            <iframe src="${videoSrc}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>`;
+                } else if (data.image) {
+                    lightboxImages.push(data.image);
+                    galleryHTML += `
+                        <img src="${data.image}" alt="${data.title}" onclick="openLightbox(0)">`;
+                }
+            }
+            galleryHTML += `</div>`;
+
+            // 2. Secondary Media
+            galleryHTML += `<div class="gallery-secondary">`;
+            
+            if (data.modelUrl) {
+                const modelsForThisProject = [];
+                // Default model for this project
+                modelsForThisProject.push({
+                    label: "Undulating",
+                    modelUrl: "3dmodels/undulating.glb"
+                });
+                // Add lantern as a second selectable model
+                modelsForThisProject.push({
+                    label: "Lantern",
+                    modelUrl: "3dmodels/lantern.glb"
+                });
+
+                modelsForThisProject.forEach((m) => {
+                    galleryHTML += `
+                        <div class="modal-image-thumb" onclick="document.getElementById('active-model-viewer').src = '${m.modelUrl}'">
+                            <div style="
+                              width: 100%;
+                              height: 100%;
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                              background: rgba(0,0,0,0.4);
+                              color: #e0e0ff;
+                              font-family: 'Orbitron', sans-serif;
+                              font-size: 0.8rem;
+                              text-transform: uppercase;
+                              letter-spacing: 1px;
+                              border: 1px solid var(--cyan-glow);
+                            ">
+                              ${m.label}
+                            </div>
+                        </div>`;
+                });
+            }
+
+            // XR Link
+            if (data.xrLink) {
+                galleryHTML += `
+                    <div class="media-container">
+                        <iframe src="${data.xrLink}" frameborder="0" allowfullscreen allow="xr-spatial-tracking"></iframe>
+                    </div>`;
+            }
+
+            // Main Video (if not hero)
+            if (data.type === 'video' && data.videoId && data.videoId !== data.heroVideo) {
+                galleryHTML += `
+                    <div class="media-container">
+                        <iframe src="https://www.youtube.com/embed/${data.videoId}" frameborder="0" allowfullscreen></iframe>
+                    </div>`;
+            }
+
+            // Video Gallery (Additional Sessions)
+            if (data.gallery && data.gallery.length > 0) {
+                galleryHTML += `<h3 style="color: var(--cyan-glow); font-family: Orbitron; margin-bottom: 1rem; margin-top: 2rem;">Virtual Conversations For Content Creators</h3>`;
+                data.gallery.forEach(item => {
+                    const startParam = item.start ? `?start=${item.start}` : '';
+                    galleryHTML += `
+                        <div>
+                            <div class="media-container" style="margin-bottom: 0.5rem;">
+                                <iframe src="https://www.youtube.com/embed/${item.videoId}${startParam}" 
+                                    style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen></iframe>
+                            </div>
+                            <p style="color:var(--text-muted); font-size:0.9rem; font-family: Montserrat;">${item.title}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            // Extra Images
+            const extraImages = data.images || [];
+            const startIdx = (data.image && extraImages.length > 0 && data.image === extraImages[0] && !data.heroVideo) ? 1 : 0;
+            
+            for(let i=startIdx; i<extraImages.length; i++) {
+                lightboxImages.push(extraImages[i]);
+                const lbIndex = lightboxImages.length - 1;
+                galleryHTML += `
+                    <img src="${extraImages[i]}" alt="Detail ${i}" loading="lazy" onclick="openLightbox(${lbIndex})">`;
+            }
+            
+            galleryHTML += `</div>`; // End gallery-secondary
+
+            // --- Build Info Content (Right Column) ---
+            let infoHTML = '';
+            
+            infoHTML += `
+                <div class="info-header">
+                    <h2 class="modal-title-large">${data.title}</h2>
+                    <span class="modal-year">${data.year} | ${data.category}</span>
+                </div>
+                
+                <div class="info-desc">
+                    <span class="narrative-label">CONCEPT</span>
+                    <p class="narrative-text">${data.concept || data.desc || data.description}</p>
+                </div>
+                
+                <button id="mobile-gallery-btn" onclick="toggleMobileGallery()">View Full Gallery</button>
+                
+                <div class="info-footer modal-tech-footer">
+                    <div class="tech-item">
+                        <span class="narrative-label">MATERIALS</span>
+                        <p class="narrative-text" style="font-size: 0.9rem;">${data.materials}</p>
+                    </div>
+                    <div class="tech-item">
+                        <span class="narrative-label">CONTRIBUTION</span>
+                        <p class="narrative-text" style="font-size: 0.9rem;">${data.contribution || 'Lead Artist'}</p>
+                    </div>
+            `;
+            
+            // Software/Details
+            if (data.details && data.details.length > 0) {
+                 infoHTML += `
+                    <div class="tech-item">
+                        <span class="narrative-label">DETAILS</span>
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            ${data.details.map(d => `<li class="narrative-text" style="font-size: 0.9rem; margin-bottom: 0.2rem;">${d}</li>`).join('')}
+                        </ul>
+                    </div>
+                 `;
+            }
+            infoHTML += `</div>`; // End info-footer
+
+            // Combine into Split Layout
+            const fullHTML = `
+                <div class="modal-split-layout">
+                    <div class="modal-gallery">
+                        <div class="gallery-tracker"><div class="gallery-progress"></div></div>
+                        ${galleryHTML}
+                        <div class="scroll-hint"></div>
+                    </div>
+                    <div class="modal-info">${infoHTML}</div>
+                </div>`;
+
+            document.getElementById('modal-dynamic-content').innerHTML = fullHTML;
+
+            // Error handling for 3D model fallback
+            if (data.modelUrl) {
+                const mv = document.getElementById('modal-dynamic-content').querySelector('model-viewer');
+                if (mv) {
+                    mv.addEventListener('error', () => {
+                        const container = mv.closest('.media-container');
+                        if (container && data.image) {
+                            container.innerHTML = `<img src="${data.image}" alt="${data.title}" style="width:100%; height:100%; object-fit:contain;">`;
+                        }
+                    });
+                }
+
+                // Full Screen Logic
+                const container = document.getElementById('model-viewer-container');
+                const fsBtn = document.getElementById('fullscreen-btn');
+                if (container && fsBtn) {
+                    fsBtn.addEventListener('click', () => {
+                        if (!document.fullscreenElement) {
+                            container.requestFullscreen().catch(err => {
+                                console.error(`Error enabling full-screen mode: ${err.message}`);
+                            });
+                        } else {
+                            document.exitFullscreen();
+                        }
+                    });
+                    fsBtn.onmouseover = () => { fsBtn.style.background = 'rgba(180, 210, 255, 0.3)'; fsBtn.style.color = '#000'; };
+                    fsBtn.onmouseout = () => { fsBtn.style.background = 'rgba(248, 250, 255, 0.1)'; fsBtn.style.color = '#555'; };
+                }
+            }
+
+            const modal = document.getElementById('project-modal');
+            modal.style.display = 'block';
+            setTimeout(() => modal.classList.add('active'), 10);
+
+            // Scroll Tracker Logic
+            const tracker = modal.querySelector('.gallery-progress');
+            const hint = modal.querySelector('.scroll-hint');
+            
+            // Reset hint visibility for desktop
+            if (window.innerWidth > 968 && hint) {
+                hint.style.opacity = '1';
+                // Also show tracker
+                const trackerContainer = modal.querySelector('.gallery-tracker');
+                if(trackerContainer) trackerContainer.style.display = 'block';
+                hint.style.display = 'block';
+            }
+
+            modal.onscroll = () => {
+                const scrollTop = modal.scrollTop;
+                const docHeight = modal.scrollHeight - modal.clientHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                
+                if (tracker) tracker.style.height = `${scrollPercent}%`;
+                
+                if (hint && scrollTop > 50) {
+                    hint.style.opacity = '0';
+                }
+            };
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('project-modal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+            document.body.style.overflow = 'auto';
+        }
+
+        // Lightbox Functions
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            
+            if (lightboxImages[index]) {
+                img.src = lightboxImages[index];
+                lightbox.classList.add('active');
+            }
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function changeLightboxImage(direction) {
+            currentLightboxIndex += direction;
+            
+            if (currentLightboxIndex < 0) currentLightboxIndex = lightboxImages.length - 1;
+            if (currentLightboxIndex >= lightboxImages.length) currentLightboxIndex = 0;
+            
+            document.getElementById('lightbox-img').src = lightboxImages[currentLightboxIndex];
+        }
+
+        // Mobile Gallery Toggle
+        function toggleMobileGallery() {
+            const gallery = document.querySelector('.gallery-secondary');
+            const btn = document.getElementById('mobile-gallery-btn');
+            if (gallery) {
+                gallery.classList.add('visible');
+                btn.style.display = 'none';
+            }
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('lightbox').classList.contains('active')) {
+                    closeLightbox();
+                } else {
+                closeModal();
+                }
+            }
+        });
+
+        // Emergency banner activation (easter egg)
+        let clickCount = 0;
+        document.querySelector('.logo').addEventListener('click', () => {
+            clickCount++;
+            if (clickCount >= 5) {
+                document.querySelector('.emergency-banner').classList.add('active');
+                setTimeout(() => {
+                    document.querySelector('.emergency-banner').classList.remove('active');
+                    clickCount = 0;
+                }, 5000);
+            }
+        });
+
+        // Holographic Mouse Parallax
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth - e.pageX * 2) / 50;
+            const y = (window.innerHeight - e.pageY * 2) / 50;
+            document.querySelector('.grid-bg').style.setProperty('--parallax-x', `${x}px`);
+            document.querySelector('.grid-bg').style.setProperty('--parallax-y', `${y}px`);
+        });
+
+        // Enter the Grid Transition
+        document.getElementById('enter-grid-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const grid = document.querySelector('.grid-bg');
+            grid.classList.add('zoom-active');
+            
+            // Flash effect
+            const flash = document.createElement('div');
+            flash.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;opacity:0;transition:opacity 0.1s;pointer-events:none;';
+            document.body.appendChild(flash);
+            
+            setTimeout(() => flash.style.opacity = '0.8', 10);
+            setTimeout(() => flash.style.opacity = '0', 100);
+            setTimeout(() => flash.remove(), 500);
+
+            setTimeout(() => {
+                document.querySelector('#work').scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => grid.classList.remove('zoom-active'), 1000);
+            }, 800);
+        });
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        }
+
+        // Back to Top
+        window.addEventListener('scroll', () => {
+            const backToTop = document.getElementById('back-to-top');
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+    </script>
+</body>
+</html>
