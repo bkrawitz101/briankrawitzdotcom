@@ -1,0 +1,415 @@
+:root {
+    --kubrick-white: #f5f5f5;
+    --kubrick-red: #d32f2f;
+    --kubrick-black: #0a0a0a;
+    --spielberg-blue: #1a237e;
+    --spielberg-gold: #ffc107;
+    --glow: rgba(255, 193, 7, 0.6);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Futura', 'Gill Sans', 'Century Gothic', sans-serif;
+    background: linear-gradient(180deg, #000000 0%, #0a0a14 50%, #000000 100%);
+    color: var(--kubrick-white);
+    overflow-x: hidden;
+    letter-spacing: 0.05em;
+}
+
+/* Opening Scene - Full Screen Film Experience */
+.opening-scene {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, rgba(26, 35, 126, 0.3) 0%, transparent 70%);
+    z-index: 10;
+}
+
+/* Fixed Video Background for Timeline */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.6;
+}
+
+    .video-background video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7) contrast(1.1);
+    }
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+    mix-blend-mode: multiply;
+}
+
+.title-card {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    animation: fadeInTitle 2s ease-out 0.5s both;
+}
+
+@keyframes fadeInTitle {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.film-title {
+    font-size: clamp(3rem, 10vw, 8rem);
+    font-weight: 100;
+    letter-spacing: 0.15em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin: 0;
+    text-shadow: 0 0 40px rgba(255, 193, 7, 0.6), 0 0 80px rgba(255, 193, 7, 0.3), 2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation: titlePulse 4s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% {
+        text-shadow: 0 0 40px rgba(255, 193, 7, 0.6), 0 0 80px rgba(255, 193, 7, 0.3), 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    50% {
+        text-shadow: 0 0 60px rgba(255, 193, 7, 0.8), 0 0 120px rgba(255, 193, 7, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+}
+
+.film-subtitle {
+    font-size: clamp(1rem, 2vw, 1.8rem);
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    margin-top: 1.5rem;
+    opacity: 0.85;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Fade Overlay for Scene Transitions */
+.fade-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+}
+
+@keyframes fadeToBlack {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeFromBlack {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Next Button - Cinematic Style */
+.next-button {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    background: transparent;
+    border: 2px solid rgba(255, 193, 7, 0.5);
+    color: var(--kubrick-white);
+    padding: 1rem 2.5rem;
+    font-family: inherit;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    animation: fadeInPrompt 2s ease-out 3s both;
+}
+
+    .next-button:hover {
+        border-color: var(--spielberg-gold);
+        background: rgba(255, 193, 7, 0.1);
+        box-shadow: 0 0 30px rgba(255, 193, 7, 0.3);
+        transform: translateX(-50%) scale(1.05);
+    }
+
+    .next-button .arrow {
+        font-size: 1.5rem;
+        transition: transform 0.4s;
+    }
+
+    .next-button:hover .arrow {
+        transform: translateX(5px);
+    }
+
+@keyframes fadeInPrompt {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Path Selection - Choose Your Own Adventure */
+.path-selection {
+    min-height: 100vh;
+    padding: 6rem 2rem;
+    position: relative;
+    display: none; /* Hidden initially */
+    flex-direction: column;
+    align-items: center;
+}
+
+.chapter-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 100;
+    letter-spacing: 0.2em;
+    text-align: center;
+    margin-bottom: 4rem;
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+.path-container {
+    position: relative;
+    max-width: 800px;
+    width: 100%;
+}
+
+.path-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent 0%, rgba(255, 193, 7, 0.3) 10%, rgba(255, 193, 7, 0.3) 90%, transparent 100%);
+    transform: translateX(-50%);
+}
+
+.path-node {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 4rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    .path-node:hover:not(.path-locked) {
+        transform: scale(1.05);
+    }
+
+.node-ring {
+    position: absolute;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border: 2px solid rgba(255, 193, 7, 0.5);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    transition: all 0.4s;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.3);
+}
+
+.path-node:hover:not(.path-locked) .node-ring {
+    border-color: var(--spielberg-gold);
+    box-shadow: 0 0 30px rgba(255, 193, 7, 0.6), 0 0 60px rgba(255, 193, 7, 0.3), inset 0 0 20px rgba(255, 193, 7, 0.2);
+    transform: translateX(-50%) scale(1.2);
+}
+
+.node-content {
+    background: rgba(10, 10, 20, 0.7);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    padding: 2rem;
+    margin-left: 60%;
+    width: 40%;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s;
+}
+
+.path-node:nth-child(odd) .node-content {
+    margin-left: 0;
+    margin-right: 60%;
+    text-align: right;
+}
+
+.path-node:hover:not(.path-locked) .node-content {
+    border-color: rgba(255, 193, 7, 0.5);
+    background: rgba(10, 10, 20, 0.85);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.node-number {
+    display: block;
+    font-size: 3rem;
+    font-weight: 100;
+    opacity: 0.3;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.node-content h3 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.node-content p {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+}
+
+.path-locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.coming-soon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 20px;
+    white-space: nowrap;
+    z-index: 3;
+}
+
+/* Footer - Minimalist */
+footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    font-size: 0.9rem;
+    opacity: 0.6;
+    letter-spacing: 0.1em;
+    border-top: 1px solid rgba(255, 193, 7, 0.1);
+    margin-top: 4rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .film-title {
+        letter-spacing: 0.1em;
+    }
+
+    .path-selection {
+        padding: 4rem 1rem;
+    }
+
+    .chapter-title {
+        margin-bottom: 3rem;
+    }
+
+    .path-node {
+        margin: 3rem 0;
+    }
+
+    .node-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: calc(100% - 2rem);
+        text-align: left !important;
+        padding: 1.5rem;
+        margin-top: 5rem;
+    }
+
+    .node-ring {
+        left: 1rem;
+        transform: none;
+    }
+
+    .path-node:hover:not(.path-locked) .node-ring {
+        transform: scale(1.2);
+    }
+
+    .path-line {
+        left: calc(1rem + 30px);
+    }
+}
+
+/* Starfield Background */
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -2; /* Behind everything */
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
