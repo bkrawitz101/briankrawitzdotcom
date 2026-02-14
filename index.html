@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Life of Brian Krawitz</title>
+    <link rel="stylesheet" href="portal.css">
+</head>
+<body>
+    <!-- Starfield Background -->
+    <div id="starfield" class="stars"></div>
+
+    <!-- Transition Overlay -->
+    <div id="transition-overlay" class="fade-overlay"></div>
+
+    <!-- Scene 1: Opening -->
+    <section id="scene-1" class="opening-scene">
+        <div class="title-card">
+            <h1 class="film-title">Brian Krawitz</h1>
+            <p class="film-subtitle">A Cinematic Journey</p>
+        </div>
+        
+        <button id="next-btn" class="next-button">
+            Enter Portal <span class="arrow">→</span>
+        </button>
+    </section>
+
+    <!-- Scene 2: Path Selection (Hidden initially) -->
+    <section id="path-selection" class="path-selection">
+        <!-- Video Background -->
+        <div class="video-background">
+            <div class="video-overlay"></div>
+            <!-- Placeholder for video background -->
+            <video autoplay muted loop playsinline>
+                <!-- <source src="background.mp4" type="video/mp4"> -->
+            </video>
+        </div>
+
+        <h2 class="chapter-title">Select Your Path</h2>
+
+        <div class="path-container">
+            <div class="path-line"></div>
+
+            <a href="#software" class="path-node">
+                <div class="node-ring"></div>
+                <div class="node-content">
+                    <span class="node-number">01</span>
+                    <h3>In the beginning</h3>
+                    <p>The early years</p>
+                </div>
+            </a>
+
+            <a href="#creative" class="path-node">
+                <div class="node-ring"></div>
+                <div class="node-content">
+                    <span class="node-number">02</span>
+                    <h3>Finding myself for the first time</h3>
+                    <p>Coming out of my first shell</p>
+                </div>
+            </a>
+            
+            <a href="#media" class="path-node">
+                <div class="node-ring"></div>
+                <div class="node-content">
+                    <span class="node-number">03</span>
+                    <h3>My conventional media career</h3>
+                    <p>Learning the ropes</p>
+                </div>
+            </a>
+
+            <a href="#artist" class="path-node">
+                <div class="node-ring"></div>
+                <div class="node-content">
+                    <span class="node-number">04</span>
+                    <h3>Brian Krawitz Artist</h3>
+                    <p>A journey through my portfolio</p>
+                </div>
+            </a>
+        </div>
+        
+        <footer>
+            &copy; 2024 Brian Krawitz. All rights reserved.
+        </footer>
+    </section>
+
+    <script src="portal.js"></script>
+</body>
+</html>
