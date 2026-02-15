@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;700&family=Montserrat:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;700&family=Montserrat:wght@300;400;600&family=Permanent+Marker&display=swap');
 
         :root {
             /* Tron/Blade Runner neon palette */
@@ -177,6 +177,40 @@
             color: var(--cyan-glow);
             border: 1px solid var(--cyan-glow);
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        /* E.T. Style Home Button */
+        .go-home-et {
+            font-family: 'Permanent Marker', cursive !important;
+            font-size: 1.2rem !important;
+            color: #e0f7fa !important; /* Electric White/Blue */
+            text-shadow: 
+                0 0 5px #00e5ff,
+                0 0 10px #00e5ff,
+                0 0 20px #00e5ff;
+            letter-spacing: 1px !important;
+            border: none !important;
+            transition: all 0.4s ease;
+        }
+
+        .go-home-et:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 40px #00e5ff, 0 0 60px #00e5ff;
+            box-shadow: none !important;
+        }
+
+        /* Fullscreen overlay for fade effect */
+        #page-transition-overlay {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
         }
 
         /* Hamburger Menu */
@@ -1513,8 +1547,6 @@
     </style>
 </head>
 <body>
-    <div id="page-transition-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 99999; pointer-events: none; transition: opacity 1.5s ease-out;"></div>
-    <script>window.addEventListener('load', function() { document.getElementById('page-transition-overlay').style.opacity = '0'; setTimeout(function(){ document.getElementById('page-transition-overlay').remove(); }, 1500); });</script>
     <div class="grid-bg"></div>
     <div class="crt-lines"></div>
     <div class="static-overlay"></div>
@@ -1524,6 +1556,7 @@
         <nav class="container">
             <div class="logo">[en]lightening concepts</div>
             <ul class="nav-links">
+                <li><a href="../../../index.html#timeline" class="go-home-et" onclick="handlePageTransition(event, this.href)">Go Home</a></li>
                 <li><a href="#bio" onclick="toggleMobileMenu()">Origin</a></li>
                 <li><a href="#physical" onclick="toggleMobileMenu()">Light & Sculpture</a></li>
                 <li><a href="#digital" onclick="toggleMobileMenu()">Digital Realms</a></li>
@@ -3119,6 +3152,37 @@
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 1. Create overlay if it doesn't exist
+        if (!document.getElementById('page-transition-overlay')) {
+            const overlay = document.createElement('div');
+            overlay.id = 'page-transition-overlay';
+            document.body.appendChild(overlay);
+        }
+
+        // 2. Handle Fade IN on load
+        window.addEventListener('pageshow', (event) => {
+            const overlay = document.getElementById('page-transition-overlay');
+            overlay.style.opacity = '1'; // Start black
+            
+            // Small delay to ensure render, then fade out (reveal page)
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '0';
+            });
+        });
+
+        // 3. Handle Fade OUT on click
+        function handlePageTransition(e, targetUrl) {
+            e.preventDefault(); // Stop immediate jump
+            
+            const overlay = document.getElementById('page-transition-overlay');
+            overlay.style.opacity = '1'; // Fade to black
+            
+            // Wait for transition (500ms) then navigate
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500);
         }
 
 

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCR v8 - Master Control Room | Brian Krawitz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&family=Courier+Prime&display=swap');
+
+        :root {
+            --void-black: #0a0a0f;
+            --rack-grey: #1a1a1f;
+            --tally-red: #ff3333;
+            --tally-green: #00ff00;
+            --scope-cyan: #00ccff;
+            --vu-amber: #ffaa00;
+            --log-bg: #0d0d12;
+        }
+
+        body {
+            margin: 0;
+            padding: 2rem;
+            background: var(--void-black);
+            color: #e0e0ff;
+            font-family: 'Rajdhani',sans-serif;
+            min-height: 100vh;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid #2a2a33;
+            padding-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Orbitron',sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--tally-red);
+            text-shadow: 0 0 20px rgba(255,51,51,0.6);
+        }
+
+        .multiviewer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+            gap: 1.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #111;
+            border: 4px solid #333;
+        }
+
+        .rack-unit {
+            background: var(--rack-grey);
+            border: 2px solid #444;
+            padding: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .rack-ears {
+            position: absolute;
+            left: -10px;
+            right: -10px;
+            top: 10px;
+            bottom: 10px;
+            background: #222;
+            z-index: -1;
+            border: 1px solid #555;
+        }
+
+        .monitor-card {
+            position: relative;
+            background: #000;
+            border: 2px solid #333;
+            height: 280px;
+            cursor: pointer;
+            overflow: hidden;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+
+            .monitor-card:hover {
+                border-color: var(--tally-red);
+                box-shadow: 0 0 20px rgba(255,51,51,0.5);
+                transform: scale(1.02);
+            }
+
+        .monitor-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.7;
+            filter: grayscale(0.4) contrast(1.2);
+            transition: 0.3s;
+        }
+
+        .monitor-card:hover img {
+            opacity: 1;
+            filter: none;
+        }
+
+        .safe-area, .center-cross, .scanlines, .osd-top-left, .tally-light, .monitor-meta {
+            pointer-events: none;
+            position: absolute;
+            z-index: 20;
+        }
+
+        .safe-area {
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .center-cross {
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            border-left: 1px solid rgba(255,255,255,0.3);
+            border-top: 1px solid rgba(255,255,255,0.3);
+            transform: translate(-50%,-50%);
+        }
+
+        .scanlines {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,rgba(0,0,0,0.2) 0px,transparent 1px,transparent 2px);
+        }
+
+        .osd-top-left {
+            top: 10px;
+            left: 10px;
+            font-family: 'Share Tech Mono';
+            color: var(--tally-green);
+            background: rgba(0,0,0,0.8);
+            padding: 2px 6px;
+            font-size: 0.8rem;
+        }
+
+        .tally-light {
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            background: #300;
+            border: 1px solid #500;
+            color: #500;
+            font-size: 0.6rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+        }
+
+        .monitor-card:hover .tally-light {
+            background: var(--tally-red);
+            color: white;
+            box-shadow: 0 0 10px var(--tally-red);
+        }
+
+        .monitor-meta {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #333;
+        }
+
+        .meta-title {
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .meta-role {
+            color: var(--scope-cyan);
+            font-family: 'Share Tech Mono';
+            font-size: 0.8rem;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .run-log-window {
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            background: var(--log-bg);
+            border: 2px solid #444;
+            display: flex;
+            flex-direction: column;
+            animation: openWindow 0.3s ease-out;
+        }
+
+        @keyframes openWindow {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .window-header {
+            background: #222;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #333;
+            font-family: 'Share Tech Mono';
+        }
+
+        .window-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .col-source {
+            width: 350px;
+            background: #111;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-right: 1px solid #333;
+        }
+
+        .col-log {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #0d0d12;
+            overflow-y: auto;
+            font-family: 'Courier Prime',monospace;
+        }
+
+        .log-row {
+            display: flex;
+            padding: 8px 15px;
+            border-bottom: 1px solid #1a1a20;
+            color: #ccc;
+        }
+
+            .log-row:nth-child(odd) {
+                background: rgba(255,255,255,0.03);
+            }
+
+        .log-time {
+            width: 120px;
+            color: var(--scope-cyan);
+            border-right: 1px solid #333;
+            margin-right: 15px;
+        }
+
+        .log-status {
+            width: 100px;
+            text-align: right;
+            color: var(--tally-green);
+            margin-left: auto;
+        }
+
+        .win-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #444;
+            cursor: pointer;
+        }
+
+            .win-btn.close {
+                background: #ff5555;
+            }
+
+        @media(max-width:800px) {
+            .window-body {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+
+            .col-source {
+                width: 100%;
+                height: auto;
+                border-bottom: 1px solid #333;
+            }
+        }
+
+        /* Return Home Button */
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--cyan-glow, #00f3ff); /* Fallback to cyan if var not defined */
+            color: var(--cyan-glow, #00f3ff);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .home-button:hover {
+            background: var(--cyan-glow, #00f3ff);
+            color: #000;
+            box-shadow: 0 0 15px var(--cyan-glow, #00f3ff);
+        }
+
+        /* Fullscreen overlay for fade effect */
+        #page-transition-overlay {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Return Home Button -->
+    <a href="../../index.html#timeline" class="home-button" onclick="handlePageTransition(event, this.href)">
+        &larr; HOME
+    </a>
+
+    <div class="section-header"><h1 class="section-title">[ MCR ] MASTER CONTROL</h1></div>
+    <div class="multiviewer-grid">
+        <!-- 1. BLOOMBERG -->
+        <div class="rack-unit">
+            <div class="rack-ears"></div><div class="monitor-card" onclick="openRunLog('bloomberg')">
+                <div class="monitor-screen">
+                    <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=450&fit=crop"><div class="safe-area"></div><div class="osd-top-left">CAM 1: NYC_HQ</div><div class="tally-light">ON AIR</div>
+                    <div class="monitor-meta"><div><div class="meta-title">Bloomberg TV</div><div class="meta-role">Television Operator</div></div></div>
+                </div>
+            </div>
+        </div>
+        <!-- 2. CURRENT -->
+        <div class="rack-unit">
+            <div class="rack-ears"></div><div class="monitor-card" onclick="openRunLog('current')">
+                <div class="monitor-screen">
+                    <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=800&h=450&fit=crop"><div class="safe-area"></div><div class="osd-top-left">SRC: GORE_UPLINK</div><div class="tally-light">ON AIR</div>
+                    <div class="monitor-meta"><div><div class="meta-title">Current TV</div><div class="meta-role">Mgr Broadcast Eng</div></div></div>
+                </div>
+            </div>
+        </div>
+        <!-- 3. ON24 -->
+        <div class="rack-unit">
+            <div class="rack-ears"></div><div class="monitor-card" onclick="openRunLog('on24')">
+                <div class="monitor-screen">
+                    <img src="https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&h=450&fit=crop"><div class="safe-area"></div><div class="osd-top-left">STREAM: SIGNAL_ACQ</div><div class="tally-light">LIVE</div>
+                    <div class="monitor-meta"><div><div class="meta-title">ON24 Webcasting</div><div class="meta-role">Sr Signal Engineer</div></div></div>
+                </div>
+            </div>
+        </div>
+        <!-- 4. LFP -->
+        <div class="rack-unit">
+            <div class="rack-ears"></div><div class="monitor-card" onclick="openRunLog('lfp')">
+                <div class="monitor-screen">
+                    <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&h=450&fit=crop"><div class="safe-area"></div><div class="osd-top-left">VOD: QC_STATION</div><div class="tally-light">REC</div>
+                    <div class="monitor-meta"><div><div class="meta-title">LFP Inc</div><div class="meta-role">VOD Supervisor</div></div></div>
+                </div>
+            </div>
+        </div>
+        <!-- 5. E! NETWORKS -->
+        <div class="rack-unit">
+            <div class="rack-ears"></div><div class="monitor-card" onclick="openRunLog('e-networks')">
+                <div class="monitor-screen">
+                    <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&h=450&fit=crop"><div class="safe-area"></div><div class="osd-top-left">SAT: DOWNLINK_1</div><div class="tally-light">ISO</div>
+                    <div class="monitor-meta"><div><div class="meta-title">E! Networks</div><div class="meta-role">Tape Ops / Transmissions</div></div></div>
+                </div>
+            </div>
+        </div>
+        <!-- 6. IATSE -->
+        <div class="rack-unit">
+            <div class="rack-ears"></div><div class="monitor-card" onclick="openRunLog('iatse')">
+                <div class="monitor-screen">
+                    <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=450&fit=crop"><div class="safe-area"></div><div class="osd-top-left">UNION: LOCAL_16</div><div class="tally-light">STAGE</div>
+                    <div class="monitor-meta"><div><div class="meta-title">IATSE Local 16</div><div class="meta-role">Stage Technician</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL & SCRIPT -->
+    <div id="runLogModal" class="modal-overlay">
+        <div class="run-log-window">
+            <div class="window-header"><div>SYSTEM_EVENT_LOG // ID: <span id="modalJobId" style="color:white">...</span></div><div class="win-btn close" onclick="closeModal()"></div></div>
+            <div class="window-body">
+                <div class="col-source">
+                    <img id="modalImage" style="width:100%; border:2px solid #333;">
+                    <div style="color:var(--scope-cyan); font-family:'Share Tech Mono'; margin-top:20px;">SIGNAL PATH:</div>
+                    <div style="color:#888; font-family:monospace; font-size:0.8rem;">> SAT_DOWNLINK_A<br>> ROUTER_IN_12<br>> FRAME_SYNC_04<br>> PGM_OUT_MAIN</div>
+                </div>
+                <div class="col-log" id="logContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>const jobs = {
+            bloomberg: {
+                id: "BLOOMBERG_LP // NYC",
+                image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=450&fit=crop",
+                role: "Television Operator",
+                details: [
+                    "Served as both Audio 1 and Audio 2 operator simultaneously for live broadcast productions.",
+                    "Ensured timely delivery of all segment feeds under severely tight time frames (Live/Breaking News).",
+                    "Secured proper setup of single-user operated studio through meticulous testing of equipment.",
+                    "Assembled packages for various affiliates: manned camera, audio, directing, and editing (Video Cube) for business forecasts.",
+                    "Created and produced original music tracks used as segue beds for specials (e.g., 'Internet 101' Labor Day Special).",
+                    "Supported operations for a 200-seat multimedia conference room facility."
+                ]
+            },
+            current: {
+                id: "CURRENT_TV // SF_HQ",
+                image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=800&h=450&fit=crop",
+                role: "Manager, Broadcast Engineering",
+                details: [
+                    "Responsible for maintenance/upgrade of SF facility: Harris video routing, Evertz master sync, Apple video servers, Tandberg encoding.",
+                    "Served as 'On Air' support for Master Control, supporting three separate channels (US, UK, Italy) via Miranda Imagestore 750.",
+                    "Served as Engineer in Charge (EIC) for multi-country live simulcast productions (Ross MD/X Switcher, Yamaha DM2000, RTS Intercom).",
+                    "Maintained broadcast system administration across Windows and Mac OS environments.",
+                    "Oversaw remote production monitoring via MPEG streaming (Tandberg encoders/decoders).",
+                    "Supported Ingest department with multiple baseband/digital formats and NLE workflows (Final Cut Pro).",
+                    "Project Lead: Design and integration of global internal CATV distribution.",
+                    "Played key role in the technical launch of Current UK (engineering, IT, and facilities setup)."
+                ]
+            },
+            on24: {
+                id: "ON24 // WEBCAST_OPS",
+                image: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&h=450&fit=crop",
+                role: "Senior Signal Acquisitions Engineer",
+                details: [
+                    "Led complicated client-end setup calls to remote-configure various media environments for streaming.",
+                    "Responsible for configuring complex client webcasts and signal routing.",
+                    "Played key role in setting up and configuring the ON24 webcasting infrastructure.",
+                    "Served as full client support on all webcasting issues, including off-hour on-call support.",
+                    "Instrumental in bringing webcasting operations to a true video broadcast level of quality.",
+                    "Proactive design of future infrastructure and functionality for remote broadcast locations."
+                ]
+            },
+            lfp: {
+                id: "LFP_INC // LOS_ANGELES",
+                image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&h=450&fit=crop",
+                role: "Supervisor, Broadcast VOD / QC",
+                details: [
+                    "Responsible for compliance and operation of all Video On Demand (VOD) encoding using Tandberg Xport Producer.",
+                    "Maintained strict deadlines for all encoded assets and deliverables.",
+                    "Acted as primary liaison between LFP and all digital content management vendors.",
+                    "Enforced strict guidelines regarding all broadcast content quality and standards.",
+                    "Served as technical advisor for special projects, including broadcast facility purchases and upgrades.",
+                    "Designed and integrated QC stations and Tandberg encoding suites."
+                ]
+            },
+            "e-networks": {
+                id: "E!_NETWORKS // LA",
+                image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&h=450&fit=crop",
+                role: "Tape Operations / Transmissions",
+                details: [
+                    "Served as Lead Tape Operator; trained new employees and maintained fluid workflow.",
+                    "Responsible for duplication/ingest of multiple formats: Sony Beta/Digibeta, DVCAM, XDCAM, VHS, Hi8.",
+                    "Performed standards conversion using Snell & Wilcox Alchemist hardware.",
+                    "Served as 'Transmissions Operation Control' (TOC) technician.",
+                    "Managed inbound satellite downlinks via Research Concepts RC200A antenna control and Scopus IRD2600 decoders.",
+                    "Handled inbound/outbound fiber transmissions and encoding of B-roll assets."
+                ]
+            },
+            iatse: {
+                id: "IATSE_LOCAL_16 // SF",
+                image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=450&fit=crop",
+                role: "Union Member / Technician",
+                details: [
+                    "Active Member: Theatrical Stage Employees Union (1991 - Present).",
+                    "Expertise in Stage Craft and Rigging for large-scale productions.",
+                    "Professional Lighting Technical Operations and fixture implementation.",
+                    "Audio Technical Operations for live venues and events.",
+                    "AV Projection Systems setup and calibration.",
+                    "Professional Camera Operation for live broadcast and recording."
+                ]
+            }
+        };
+
+        function openRunLog(key) {
+            const d = jobs[key];
+            if (!d) return;
+
+            // Set Header Info
+            document.getElementById('modalJobId').innerText = d.id;
+            document.getElementById('modalImage').src = d.image;
+
+            // Clear and Rebuild Content
+            const c = document.getElementById('logContent');
+            c.innerHTML = '';
+
+            // Add Role Header with more padding
+            c.innerHTML += `
+                    <div style="padding:2rem; border-bottom:1px solid #333; background:#15151a;">
+                        <div style="color:#888; font-size:0.9rem; font-family:'Share Tech Mono'; letter-spacing:1px; margin-bottom:0.5rem;">OPERATIONAL ROLE:</div>
+                        <div style="color:var(--scope-cyan); font-size:1.5rem; font-weight:bold; font-family:'Orbitron'; text-shadow:0 0 10px rgba(0,204,255,0.3);">${d.role}</div>
+                    </div>
+                    <div style="padding:2rem;">
+                `;
+
+            // Add Details with larger font and spacing
+            d.details.forEach((item, index) => {
+                const num = (index + 1).toString().padStart(2, '0');
+                c.innerHTML += `
+                        <div style="display:flex; margin-bottom:1.5rem; font-family:'Courier Prime', monospace; font-size:1.1rem; line-height:1.6;">
+                            <span style="color:var(--tally-green); margin-right:1rem; font-weight:bold;">[OP_${num}]:</span>
+                            <span style="color:#e0e0ff;">${item}</span>
+                        </div>
+                    `;
+            });
+
+            c.innerHTML += `</div>`; // Close padding div
+
+            document.getElementById('runLogModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('runLogModal').style.display = 'none';
+        }
+
+        window.onclick = function (e) {
+            if (e.target == document.getElementById('runLogModal')) closeModal();
+        }
+
+        // 1. Create overlay if it doesn't exist
+        if (!document.getElementById('page-transition-overlay')) {
+            const overlay = document.createElement('div');
+            overlay.id = 'page-transition-overlay';
+            document.body.appendChild(overlay);
+        }
+
+        // 2. Handle Fade IN on load
+        window.addEventListener('pageshow', (event) => {
+            const overlay = document.getElementById('page-transition-overlay');
+            overlay.style.opacity = '1'; // Start black
+            
+            // Small delay to ensure render, then fade out (reveal page)
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '0';
+            });
+        });
+
+        // 3. Handle Fade OUT on click
+        function handlePageTransition(e, targetUrl) {
+            e.preventDefault(); // Stop immediate jump
+            
+            const overlay = document.getElementById('page-transition-overlay');
+            overlay.style.opacity = '1'; // Fade to black
+            
+            // Wait for transition (500ms) then navigate
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500);
+        }
+    </script>

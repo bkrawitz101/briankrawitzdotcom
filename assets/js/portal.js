@@ -74,3 +74,57 @@ document.querySelectorAll('.path-node').forEach(node => {
         }, 1500);
     });
 });
+
+// Debounce resize to prevent performance hit
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        drawTimelineLines(); // Call your existing drawing function
+    }, 250);
+});
+
+// Update the drawTimelineLines function (or equivalent) to handle mobile X coordinates:
+function drawTimelineLines() {
+    const steps = document.querySelectorAll('.timeline-step');
+    const isMobile = window.innerWidth <= 768;
+    
+    steps.forEach((step, index) => {
+        if (index === steps.length - 1) return; // Skip last
+        
+        const nextStep = steps[index + 1];
+        const connector = step.querySelector('.step-connector');
+        
+        // CLEAR existing SVG first
+        if (connector) connector.innerHTML = ''; 
+        
+        if (!connector) return;
+
+        // Get positions relative to the connector container
+        const startX = isMobile ? 20 : (step.offsetWidth / 2); // Mobile: align left (20px), Desktop: center
+        const startY = step.offsetHeight / 2;
+        const endX = isMobile ? 20 : (nextStep.offsetLeft - step.offsetLeft + (nextStep.offsetWidth / 2));
+        const endY = nextStep.offsetTop - step.offsetTop + (nextStep.offsetHeight / 2);
+        
+        // Create SVG
+        const svgns = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgns, "svg");
+        svg.setAttribute("width", "100%");
+        svg.setAttribute("height", "100%");
+        
+        const path = document.createElementNS(svgns, "path");
+        // Simple curve logic
+        const d = `M ${startX} ${startY} C ${startX} ${startY + 50}, ${endX} ${endY - 50}, ${endX} ${endY}`;
+        
+        path.setAttribute("d", d);
+        path.setAttribute("stroke", "var(--grid-line)");
+        path.setAttribute("stroke-width", "2");
+        path.setAttribute("fill", "none");
+        
+        svg.appendChild(path);
+        connector.appendChild(svg);
+    });
+}
+
+// Initial draw
+document.addEventListener('DOMContentLoaded', drawTimelineLines);

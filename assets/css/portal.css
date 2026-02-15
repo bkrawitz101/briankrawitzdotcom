@@ -330,6 +330,25 @@ body {
     border-radius: 20px;
     white-space: nowrap;
     z-index: 3;
+    animation: superNova 2s infinite ease-in-out;
+}
+
+@keyframes superNova {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+        text-shadow: 0 0 5px rgba(255, 193, 7, 0.3);
+        border-color: rgba(255, 193, 7, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 193, 7, 0.8), 0 0 60px rgba(255, 50, 0, 0.4);
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        border-color: rgba(255, 255, 255, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+        text-shadow: 0 0 5px rgba(255, 193, 7, 0.3);
+        border-color: rgba(255, 193, 7, 0.3);
+    }
 }
 
 /* Footer - Minimalist */
@@ -359,6 +378,7 @@ footer {
 
     .path-node {
         margin: 3rem 0;
+        align-items: flex-start;
     }
 
     .node-content {
@@ -372,6 +392,7 @@ footer {
 
     .node-ring {
         left: 1rem;
+        top: 0;
         transform: none;
     }
 
@@ -412,4 +433,72 @@ footer {
     50% {
         opacity: 1;
     }
+}
+
+/* Fix SVG scaling on mobile */
+.step-connector svg {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100px; /* Ensure minimum height */
+    overflow: visible; /* Prevent cutting off curves */
+}
+
+/* Fix step layout overlap */
+.timeline-step {
+    position: relative;
+    padding-bottom: 2rem; /* Add space between cards */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Mobile specific fixes */
+@media (max-width: 768px) {
+    .timeline {
+        padding: 0 1rem;
+    }
+    
+    .timeline-step {
+        margin-bottom: 3rem; /* More space between steps on mobile */
+    }
+
+    /* Force line to stay behind/left properly */
+    .step-connector {
+        position: absolute;
+        left: 20px; /* Adjust based on your number circle position */
+        top: 50px;
+        bottom: -30px;
+        width: 2px;
+        background: var(--grid-line); /* Fallback straight line if SVG fails */
+        z-index: 0;
+    }
+    
+    /* Hide the complex SVG on mobile if it's too broken, use straight line */
+    .step-connector svg {
+        display: none; 
+    }
+}
+
+/* Ensure timeline step has relative positioning context */
+.timeline-step {
+    position: relative !important;
+    min-height: 150px; /* Give it vertical breathing room */
+    margin-bottom: 2rem;
+}
+
+/* Force the SVG container to cover the full height */
+.step-connector {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Make SVG responsive */
+.step-connector svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }
