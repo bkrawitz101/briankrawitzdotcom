@@ -461,8 +461,7 @@
             <div class="window-body">
                 <div class="col-source">
                     <img id="modalImage" style="width:100%; border:2px solid #333;">
-                    <div style="color:var(--scope-cyan); font-family:'Share Tech Mono'; margin-top:20px;">SIGNAL PATH:</div>
-                    <div style="color:#888; font-family:monospace; font-size:0.8rem;">> SAT_DOWNLINK_A<br>> ROUTER_IN_12<br>> FRAME_SYNC_04<br>> PGM_OUT_MAIN</div>
+                    <div id="jobMetaData"></div>
                 </div>
                 <div class="col-log" id="logContent"></div>
             </div>
@@ -473,6 +472,10 @@
             bloomberg: {
                 id: "BLOOMBERG_LP // NYC",
                 image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=450&fit=crop",
+                company: "Bloomberg LP",
+                location: "New York, NY",
+                startDate: "Feb 1997",
+                endDate: "Aug 2003",
                 role: "Television Operator",
                 details: [
                     "Served as both Audio 1 and Audio 2 operator simultaneously for live broadcast productions.",
@@ -486,6 +489,10 @@
             current: {
                 id: "CURRENT_TV // SF_HQ",
                 image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=800&h=450&fit=crop",
+                company: "Current TV",
+                location: "San Francisco, CA",
+                startDate: "Apr 2006",
+                endDate: "Feb 2010",
                 role: "Manager, Broadcast Engineering",
                 details: [
                     "Responsible for maintenance/upgrade of SF facility: Harris video routing, Evertz master sync, Apple video servers, Tandberg encoding.",
@@ -501,6 +508,10 @@
             on24: {
                 id: "ON24 // WEBCAST_OPS",
                 image: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=800&h=450&fit=crop",
+                company: "ON24",
+                location: "San Francisco, CA",
+                startDate: "Jul 2011",
+                endDate: "Sep 2017",
                 role: "Senior Signal Acquisitions Engineer",
                 details: [
                     "Led complicated client-end setup calls to remote-configure various media environments for streaming.",
@@ -514,6 +525,10 @@
             lfp: {
                 id: "LFP_INC // LOS_ANGELES",
                 image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&h=450&fit=crop",
+                company: "Larry Flynt Publications",
+                location: "Los Angeles, CA",
+                startDate: "Jul 2005",
+                endDate: "Apr 2006",
                 role: "Supervisor, Broadcast VOD / QC",
                 details: [
                     "Responsible for compliance and operation of all Video On Demand (VOD) encoding using Tandberg Xport Producer.",
@@ -527,6 +542,10 @@
             "e-networks": {
                 id: "E!_NETWORKS // LA",
                 image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=800&h=450&fit=crop",
+                company: "E! Networks",
+                location: "Los Angeles, CA",
+                startDate: "Jan 2004",
+                endDate: "Jul 2005",
                 role: "Tape Operations / Transmissions",
                 details: [
                     "Served as Lead Tape Operator; trained new employees and maintained fluid workflow.",
@@ -540,6 +559,10 @@
             iatse: {
                 id: "IATSE_LOCAL_16 // SF",
                 image: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&h=450&fit=crop",
+                company: "IATSE Local 16",
+                location: "San Francisco Bay Area",
+                startDate: "Nov 2019",
+                endDate: "Present",
                 role: "Union Member / Technician",
                 details: [
                     "Active Member: Theatrical Stage Employees Union (1991 - Present).",
@@ -559,6 +582,20 @@
             // Set Header Info
             document.getElementById('modalJobId').innerText = d.id;
             document.getElementById('modalImage').src = d.image;
+
+            // Update Employment Data
+            const meta = document.getElementById('jobMetaData');
+            meta.innerHTML = `
+                <div style="margin-top:20px;">
+                    <div style="color:var(--scope-cyan); font-family:'Share Tech Mono'; margin-bottom:10px;">SIGNAL PATH:</div>
+                    <div style="font-family:'Courier Prime'; font-size:1.1rem; font-weight:bold; line-height:1.6;">
+                        > <span style="color:var(--scope-cyan);">Source:</span> <span style="color:#e0e0ff;">${d.company}</span><br>
+                        > <span style="color:var(--scope-cyan);">Location:</span> <span style="color:#e0e0ff;">${d.location}</span><br>
+                        > <span style="color:var(--scope-cyan);">Start:</span> <span style="color:#e0e0ff;">${d.startDate}</span><br>
+                        > <span style="color:var(--scope-cyan);">End:</span> <span style="color:#e0e0ff;">${d.endDate}</span>
+                    </div>
+                </div>
+            `;
 
             // Clear and Rebuild Content
             const c = document.getElementById('logContent');
