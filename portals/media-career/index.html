@@ -230,6 +230,7 @@
             justify-content: space-between;
             border-bottom: 1px solid #333;
             font-family: 'Share Tech Mono';
+            align-items: center;
         }
 
         .window-body {
@@ -297,13 +298,34 @@
         @media(max-width:800px) {
             .window-body {
                 flex-direction: column;
-                overflow-y: auto;
+                overflow: hidden;
             }
 
             .col-source {
                 width: 100%;
                 height: auto;
+                border-right: none;
                 border-bottom: 1px solid #333;
+                padding: 10px 20px;
+                flex-shrink: 0;
+            }
+
+            #modalImage {
+                display: none;
+            }
+
+            .col-source > div:first-of-type {
+                margin-top: 0 !important;
+            }
+
+            .col-log {
+                flex: 1;
+                overflow-y: auto;
+            }
+
+            .col-log div {
+                font-size: 1.2rem !important;
+            }
             }
         }
 
@@ -344,6 +366,23 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
+        }
+
+        .back-btn {
+            background: #111;
+            border: 1px solid #555;
+            color: var(--tally-green);
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #1a1a1f;
+            border-color: var(--tally-green);
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
         }
     </style>
 </head>
@@ -414,7 +453,11 @@
     <!-- MODAL & SCRIPT -->
     <div id="runLogModal" class="modal-overlay">
         <div class="run-log-window">
-            <div class="window-header"><div>SYSTEM_EVENT_LOG // ID: <span id="modalJobId" style="color:white">...</span></div><div class="win-btn close" onclick="closeModal()"></div></div>
+            <div class="window-header">
+                <div class="back-btn" onclick="closeModal()">[ &lt; BACK_TO_GRID ]</div>
+                <div>SYSTEM_EVENT_LOG // ID: <span id="modalJobId" style="color:white">...</span></div>
+                <div class="win-btn close" onclick="closeModal()"></div>
+            </div>
             <div class="window-body">
                 <div class="col-source">
                     <img id="modalImage" style="width:100%; border:2px solid #333;">
