@@ -29,6 +29,7 @@
         .section-header {
             text-align: center;
             margin-bottom: 3rem;
+            margin-top: 6rem; /* Add space for the fixed button */
             border-bottom: 2px solid #2a2a33;
             padding-bottom: 1rem;
         }
@@ -326,6 +327,19 @@
             .col-log div {
                 font-size: 1.2rem !important;
             }
+        }
+
+        @media(max-width: 1200px) {
+            .home-button {
+                position: relative;
+                top: auto;
+                left: auto;
+                display: block;
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto 2rem auto;
+                text-align: center;
+                box-sizing: border-box;
             }
         }
 
@@ -335,23 +349,33 @@
             top: 20px;
             left: 20px;
             z-index: 1000;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--cyan-glow, #00f3ff); /* Fallback to cyan if var not defined */
-            color: var(--cyan-glow, #00f3ff);
+            padding: 20px 40px;
+            background: rgba(0, 10, 20, 0.95);
+            border: 2px solid var(--tally-red); /* Match MCR title color */
+            color: var(--tally-red); /* Match MCR title color */
             text-decoration: none;
             font-family: 'Orbitron', sans-serif;
             text-transform: uppercase;
-            font-size: 0.9rem;
+            font-size: 1.5rem;
+            font-weight: 900;
             letter-spacing: 2px;
             backdrop-filter: blur(5px);
             transition: all 0.3s ease;
+            animation: homePulse 2s infinite;
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.3);
         }
 
         .home-button:hover {
-            background: var(--cyan-glow, #00f3ff);
+            background: var(--tally-red);
             color: #000;
-            box-shadow: 0 0 15px var(--cyan-glow, #00f3ff);
+            box-shadow: 0 0 50px var(--tally-red);
+            transform: scale(1.05);
+        }
+
+        @keyframes homePulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0.7); transform: scale(1); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 51, 51, 0); transform: scale(1.02); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 51, 51, 0); transform: scale(1); }
         }
 
         /* Fullscreen overlay for fade effect */
@@ -389,7 +413,7 @@
 <body>
     <!-- Return Home Button -->
     <a href="../../index.html#timeline" class="home-button" onclick="handlePageTransition(event, this.href)">
-        &larr; HOME
+        &larr; GO HOME
     </a>
 
     <div class="section-header"><h1 class="section-title">[ MCR ] MASTER CONTROL</h1></div>
