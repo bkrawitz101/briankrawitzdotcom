@@ -55,6 +55,7 @@ body {
         height: 100%;
         object-fit: cover;
         filter: brightness(0.7) contrast(1.1);
+        pointer-events: none;
     }
 
 .video-overlay {
@@ -65,6 +66,16 @@ body {
     height: 100%;
     background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
     mix-blend-mode: multiply;
+}
+
+/* Hide video play button overlay */
+video::-webkit-media-controls {
+    display: none !important;
+}
+video::-webkit-media-controls-start-playback-button,
+video::-webkit-media-controls-play-button {
+    display: none !important;
+    -webkit-appearance: none;
 }
 
 .title-card {
